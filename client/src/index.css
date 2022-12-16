@@ -1,13 +1,37 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@layer utilities {
+	body {
+		margin: 0;
+		overflow-x: hidden;
+		font-family: 'Poppins', sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+			Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+	}
+
+	nav {
+		transition: 0.5s;
+	}
+
+	.nav_menu {
+		transform: translate(-50%, -50%) !important;
+	}
+
+	.text-headingColor {
+		--tw-text-opacity: 1;
+		color: rgb(46 46 46 / var(--tw-text-opacity));
+	}
+
+	.text-textColor {
+		--tw-text-opacity: 1;
+		color: rgb(81 81 81 / var(--tw-text-opacity));
+	}
+
+	.banner_products {
+		background-image: url('./img/heroBg.png');
+		min-height: 500px;
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
 }
