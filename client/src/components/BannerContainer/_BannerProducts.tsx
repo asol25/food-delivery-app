@@ -1,11 +1,18 @@
 import * as React from 'react';
+import HeroBanner from '../../img/heroBg.png';
+
 interface IBannerProductsProps {}
 
 const BannerProducts: React.FunctionComponent<IBannerProductsProps> = () => {
 	return (
 		<>
 			<div className="py-2 flex-1 flex items-center relative">
-				<div className="w-full h-full flex items-center justify-center lg:px-32  py-4 gap-4 flex-wrap banner_products">
+				<img
+					className="absolute top-0 left-0 md:left-2/4 h-420 md:h-[133.333333%] min-h-96 lg:w-auto lg:h-650"
+					src={HeroBanner}
+					alt="banner_bg"
+				></img>
+				<div className="w-full h-full my-4 flex items-center justify-center lg:px-32  py-4 gap-4 flex-wrap banner_products">
 					<div className="lg:w-190 p-4 bg-cardOverlay backdrop-blur-md rounded-3xl flex flex-col items-center justify-center drop-shadow-lg">
 						<img
 							src="https://freesvg.org/storage/img/thumb/icecream-2221064.png"
