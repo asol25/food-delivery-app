@@ -4,17 +4,15 @@ import FoodContainer from './FoodContainer/_FoodContainer';
 
 interface IMainContainerProps {}
 
-const MainContainer: React.FunctionComponent<IMainContainerProps> = () => {
-	return (
-		<>
-			<main className="main">
-				<FoodContainer />
-				<FoodContainer />
-				<FoodContainer />
-				<CategoriesContainer />
-			</main>
-		</>
-	);
-};
+const MainContainer: React.FunctionComponent<IMainContainerProps> = () => (
+	<>
+		<main className="main">
+			<FoodContainer />
+			<FoodContainer />
+			<FoodContainer />
+			<CategoriesContainer />
+		</main>
+	</>
+);
 
 export default MainContainer;

@@ -5,7 +5,7 @@ import NavContainer from './_NavContainer';
 interface IHeaderContainerProps {}
 
 const HeaderContainer: React.FunctionComponent<IHeaderContainerProps> = () => {
-	const [toggleMenu, setToggleMenu] = React.useState<boolean>(true);
+	const [toggleMenu, setToggleMenu] = React.useState<boolean>(false);
 
 	const handleToggle = () => {
 		setToggleMenu(!toggleMenu);
