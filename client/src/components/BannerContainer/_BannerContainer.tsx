@@ -1,7 +1,7 @@
-import * as React from 'react';
-import BannerContent from './_BannerContent';
-import BannerProducts from './_BannerProducts';
-import HeroBanner from '../../img/heroBg.png';
+import * as React from "react";
+import BannerContent from "./_BannerContent";
+import BannerProducts from "./_BannerProducts";
+import HeroBanner from "../../img/heroBg.png";
 
 interface IBannerContainerProps {}
 

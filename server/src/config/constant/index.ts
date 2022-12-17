@@ -1,1 +1,1 @@
-export const NON_PAGINATION = 'NON_PAGENATION';
+export const NON_PAGINATION = "NON_PAGENATION";

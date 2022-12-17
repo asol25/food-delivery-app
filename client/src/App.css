@@ -2,6 +2,13 @@
 	text-align: center;
 }
 
+.section {
+	margin: 2.5em 0;
+}
+
+.section-container {
+	margin: 1.5em 0;
+}
 .App-logo {
 	height: 40vmin;
 	pointer-events: none;
@@ -36,6 +43,7 @@
 .swiper-slide {
 	text-align: center;
 	font-size: 18px;
+	min-width: fit-content;
 	background: #fff;
 
 	display: -webkit-box;
@@ -59,13 +67,8 @@
 	object-fit: contain;
 }
 
-@media only screen and (max-width: 1024px) {
-	.swiper-wrapper {
-		gap: 10em !important;
-	}
-	.swiper-slide {
-		justify-content: flex-start;
-	}
+.absolute-center-left {
+	transform: translateX(-50%);
 }
 @keyframes App-logo-spin {
 	from {

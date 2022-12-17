@@ -1,6 +1,6 @@
-import * as React from 'react';
-import LogoHeader from './_LogoHeader';
-import NavContainer from './_NavContainer';
+import * as React from "react";
+import LogoHeader from "./_LogoHeader";
+import NavContainer from "./_NavContainer";
 
 interface IHeaderContainerProps {}
 

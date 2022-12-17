@@ -1,10 +1,10 @@
-import { SwaggerSetting } from './config/swagger/index';
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './modules/app.module';
+import { SwaggerSetting } from "./config/swagger/index";
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./modules/app.module";
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {
-		logger: ['error', 'warn', 'log'],
+		logger: ["error", "warn", "log"],
 	});
 	const PORT = process.env.PORT || 33714;
 	app.enableCors();

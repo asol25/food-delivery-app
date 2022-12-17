@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import * as React from 'react';
+import * as React from "react";
 
 interface INavContainerProps {
 	handleToggle: () => void;
@@ -12,7 +12,7 @@ const NavContainer: React.FunctionComponent<INavContainerProps> = (props) => {
 		<>
 			<nav
 				className={`absolute md:hidden top-0 h-full w-full bg-black z-10 ${
-					toggleMenu ? 'left-0' : 'left-[100em]'
+					toggleMenu ? "left-0" : "left-[100em]"
 				}`}
 			>
 				<i
@@ -28,9 +28,11 @@ const NavContainer: React.FunctionComponent<INavContainerProps> = (props) => {
 			</nav>
 
 			<nav>
-				<ul className="hidden md:flex">
+				<ul className="hidden md:flex items-center justify-center cursor-pointer">
 					<li className="p-4 text-l g text-black font-medium hover:text-green-500">Home</li>
-					<li className="p-4 text-l g text-black font-medium hover:text-green-500">Menu</li>
+					<li className="p-4 text-l g text-black font-medium hover:text-green-500">
+						<a href="#menu">Menu</a>
+					</li>
 					<li className="p-4 text-l g text-black font-medium hover:text-green-500">About</li>
 					<li className="p-4 text-lg text-black font-medium hover:text-green-500">Contact</li>
 				</ul>
