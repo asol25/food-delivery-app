@@ -11,7 +11,7 @@ const NavContainer: React.FunctionComponent<INavContainerProps> = (props) => {
 		<>
 			<nav
 				className={
-					'absolute md:hidden top-0 h-screen w-screen bg-black ' +
+					'absolute md:hidden top-0 h-full w-full bg-black z-10 ' +
 					(toggleMenu ? 'left-0' : 'left-[100em]')
 				}
 			>
@@ -19,7 +19,7 @@ const NavContainer: React.FunctionComponent<INavContainerProps> = (props) => {
 					onClick={handleToggle}
 					className="ri-close-circle-line absolute top-1 right-2 text-white text-2xl"
 				></i>
-				<ul className="nav_menu absolute top-2/4 left-2/4 cursor-pointer">
+				<ul className="nav_menu absolute top-[300px] left-2/4 cursor-pointer">
 					<li className="p-4 text-l g text-white font-medium hover:text-green-500">Home</li>
 					<li className="p-4 text-l g text-white font-medium hover:text-green-500">Menu</li>
 					<li className="p-4 text-l g text-white font-medium hover:text-green-500">About</li>
