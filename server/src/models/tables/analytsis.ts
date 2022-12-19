@@ -1,26 +1,15 @@
 import {
+	BaseEntity,
 	CreateDateColumn,
 	Entity,
-	JoinTable,
-	ManyToMany,
-	ManyToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
-import { Products } from "./products";
-import { Users } from "./users";
 
 @Entity()
-export class Favorites {
+export class Analysis extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
-
-	@ManyToOne(() => Products, (product) => product.favorites)
-	product: Products;
-
-	@ManyToMany(() => Users)
-	@JoinTable()
-	users: Users[];
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;

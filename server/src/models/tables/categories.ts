@@ -1,14 +1,22 @@
 import {
-	CreateDateColumn,
 	Entity,
 	PrimaryGeneratedColumn,
+	Column,
+	CreateDateColumn,
 	UpdateDateColumn,
+	BaseEntity,
 } from "typeorm";
 
 @Entity()
-export class Analysis {
+export class Categories extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
+
+	@Column()
+	name: string;
+
+	@Column()
+	thumbnail: string;
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;

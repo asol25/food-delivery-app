@@ -7,3 +7,8 @@ export enum EventRole {
 	SHIPPER_GOING_TO = "shipper_going_to",
 	SHIPPER_SUCCESSFULLY = "shipper_successfully",
 }
+
+export enum MessagesType {
+	USER = "USER",
+	CHANNEL = "EMPLOYEE",
+}

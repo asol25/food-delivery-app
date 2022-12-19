@@ -1,6 +1,5 @@
-import { IsInt } from "class-validator";
 import {
-	Column,
+	BaseEntity,
 	CreateDateColumn,
 	Entity,
 	JoinTable,
@@ -13,19 +12,16 @@ import { Products } from "./products";
 import { Users } from "./users";
 
 @Entity()
-export class Orders {
+export class Favorites extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@Column()
-	@IsInt()
-	cost: number;
-
-	@ManyToOne(() => Users, (user) => user.orders)
-	user: Users;
-
-	@ManyToMany(() => Products, (product) => product.orders)
+	@ManyToOne(() => Products, (product) => product.favorites)
 	product: Products;
+
+	@ManyToMany(() => Users)
+	@JoinTable()
+	users: Users[];
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;

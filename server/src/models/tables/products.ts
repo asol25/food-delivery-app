@@ -9,13 +9,14 @@ import {
 	CreateDateColumn,
 	UpdateDateColumn,
 	OneToMany,
+	BaseEntity,
 } from "typeorm";
 import { Categories } from "./categories";
 import { Comments } from "./comments";
 import { Orders } from "./orders";
 
 @Entity()
-export class Products {
+export class Products extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 

@@ -1,19 +1,24 @@
-import { IsEmail, IsInt, Max, Min, min } from "class-validator";
+import { IsEmail, IsInt, Max, Min } from "class-validator";
 import {
+	BaseEntity,
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinColumn,
+	ManyToOne,
 	OneToMany,
+	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
-import { Addresses } from "./Addresses";
+import { Addresses } from "./addresses";
 import { Comments } from "./comments";
-import { Messages } from "./messages";
+import { Receiver } from "./message_recipients";
+import { Sender } from "./message_sender";
 import { Orders } from "./orders";
 
 @Entity()
-export class Users {
+export class Users extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
@@ -30,8 +35,8 @@ export class Users {
 	@Max(11)
 	phone: number;
 
-	@OneToMany(() => Addresses, (addresses) => addresses.users)
-	addresses: Addresses[];
+	@ManyToOne(() => Addresses, (addresses) => addresses.users)
+	addresses: Addresses;
 
 	@OneToMany(() => Comments, (comment) => comment.users)
 	comments: Comments[];
@@ -39,8 +44,13 @@ export class Users {
 	@OneToMany(() => Orders, (order) => order.user)
 	orders: Orders[];
 
-	@OneToMany(() => Messages, (message) => message.user)
-	messages: Messages[];
+	@OneToOne(() => Receiver)
+	@JoinColumn()
+	receiver: Receiver;
+
+	@OneToOne(() => Sender)
+	@JoinColumn()
+	sender: Sender;
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;

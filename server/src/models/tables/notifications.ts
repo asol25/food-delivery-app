@@ -1,5 +1,6 @@
 import { Products } from "./products";
 import {
+	BaseEntity,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -12,7 +13,7 @@ import { Users } from "./users";
 import { EventRole } from "../enums";
 
 @Entity()
-export class Notifications {
+export class Notifications extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 

@@ -1,4 +1,5 @@
 import {
+	BaseEntity,
 	Column,
 	Entity,
 	JoinTable,
@@ -9,7 +10,7 @@ import { Products } from "./products";
 import { Users } from "./users";
 
 @Entity()
-export class Schedules {
+export class Schedules extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 

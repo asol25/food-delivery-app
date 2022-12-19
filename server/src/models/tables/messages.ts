@@ -1,32 +1,26 @@
-import { IsInt } from "class-validator";
 import {
+	BaseEntity,
 	Column,
 	CreateDateColumn,
 	Entity,
-	JoinTable,
-	ManyToMany,
 	ManyToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
-import { Products } from "./products";
 import { Users } from "./users";
 
 @Entity()
-export class Messages {
+export class Messages extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
 	@Column()
 	message: string;
 
-	@ManyToOne(() => Users, (user) => user.messages)
-	user: Users;
-
-	@ManyToOne(() => Users, (user) => user.messages)
+	@ManyToOne(() => Users, (snd) => snd.sender)
 	message_sender: Users;
 
-	@ManyToOne(() => Users, (user) => user.messages)
+	@ManyToOne(() => Users, (rcv) => rcv.receiver)
 	message_recipients: Users;
 
 	@CreateDateColumn({ name: "created_at" })
