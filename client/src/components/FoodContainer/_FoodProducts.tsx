@@ -14,7 +14,7 @@ const FoodProducts: React.FunctionComponent<IFoodProductsProps> = (props) => {
 	};
 	return (
 		<>
-			<div className="flex min-w-[200px] flex-col my-12 items-center gap-1">
+			<div className="flex flex-col my-12 items-center gap-1">
 				<div className="w-56 h-56">
 					<img className="object-contain" src={product.thumbnail} alt="" />
 				</div>

@@ -7,16 +7,9 @@ interface IBannerContainerProps {}
 
 const BannerContainer: React.FunctionComponent<IBannerContainerProps> = () => (
 	<>
-		<div className="my-12 md:grid grid-cols-2">
+		<div className="my-12 md:grid md:grid-cols-2 flex flex-col-reverse mx-auto">
 			<BannerContent />
-			<div className="py-2 flex-1 flex items-center relative min-h-[430px]">
-				<img
-					className="absolute top-0 left-0 md:left-2/4 h-420 md:h-[500px] min-h-96 lg:w-auto"
-					src={HeroBanner}
-					alt="banner_bg"
-				/>
-				<BannerProducts />
-			</div>
+			<BannerProducts />
 		</div>
 	</>
 );

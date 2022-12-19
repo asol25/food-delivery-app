@@ -1,5 +1,6 @@
 import * as React from "react";
 import { ProductsHook } from "../services/hook/productsHook";
+import BannerContainer from "./BannerContainer/_BannerContainer";
 import CategoriesContainer from "./CategoriesContainer/CategoriesContainer";
 import FoodContainer from "./FoodContainer/_FoodContainer";
 
@@ -10,10 +11,11 @@ const MainContainer: React.FunctionComponent<IMainContainerProps> = () => {
 	return (
 		<>
 			<main className="main">
+				<BannerContainer />
 				<FoodContainer title={"Favorite"} products={products} />
 				<FoodContainer title={"Top Sales"} products={products} />
 				<FoodContainer title={"Discount"} products={products} />
-				<CategoriesContainer />
+				<CategoriesContainer products={products} />
 			</main>
 		</>
 	);

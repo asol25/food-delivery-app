@@ -3,7 +3,7 @@ import * as React from "react";
 
 interface ICategoriesMenuProps {}
 
-const CategoriesMenu: React.FunctionComponent<ICategoriesMenuProps> = (props) => {
+const CategoriesMenu: React.FunctionComponent<ICategoriesMenuProps> = () => {
 	return (
 		<>
 			<div className="rounded-lg bg-amber-500 flex items-center justify-center flex-col w-[80px] h-[100px] gap-2">
