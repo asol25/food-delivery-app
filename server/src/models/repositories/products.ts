@@ -12,6 +12,7 @@ import {
 } from "typeorm";
 import { Categories } from "./categories";
 import { Comments } from "./comments";
+import { Orders } from "./orders";
 
 @Entity()
 export class Products {
@@ -38,11 +39,11 @@ export class Products {
 	@Min(3)
 	cost: number;
 
-	@Column({ default: 0.5 })
+	@Column({ default: 5 })
 	@IsInt()
-	@Min(0)
+	@Min(5)
 	@Max(100)
-	sale!: number;
+	sale: number;
 
 	@Column({ default: 0 })
 	@IsInt()
@@ -58,6 +59,9 @@ export class Products {
 
 	@OneToMany(() => Favorites, (favorite) => favorite.product)
 	favorites: Favorites[];
+
+	@OneToMany(() => Orders, (order) => order.product)
+	orders: Orders[];
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;

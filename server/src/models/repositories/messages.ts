@@ -1,38 +1,33 @@
-import { Products } from "./products";
+import { IsInt } from "class-validator";
 import {
 	Column,
 	CreateDateColumn,
 	Entity,
 	JoinTable,
 	ManyToMany,
+	ManyToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
+import { Products } from "./products";
 import { Users } from "./users";
-import { EventRole } from "../enums";
 
 @Entity()
-export class Notifications {
+export class Messages {
 	@PrimaryGeneratedColumn()
 	id: number;
-
-	@Column({
-		type: "enum",
-		enum: EventRole,
-		default: EventRole.NONE,
-	})
-	status: EventRole;
 
 	@Column()
 	message: string;
 
-	@ManyToMany(() => Users)
-	@JoinTable()
-	users: Users[];
+	@ManyToOne(() => Users, (user) => user.messages)
+	user: Users;
 
-	@ManyToMany(() => Products)
-	@JoinTable()
-	products: Products[];
+	@ManyToOne(() => Users, (user) => user.messages)
+	message_sender: Users;
+
+	@ManyToOne(() => Users, (user) => user.messages)
+	message_recipients: Users;
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;

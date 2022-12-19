@@ -1,3 +1,10 @@
 {
-	"cSpell.words": ["linebreak", "nestjs", "Swiper", "typeorm"]
+	"cSpell.words": [
+		"linebreak",
+		"nestjs",
+		"PAGENATION",
+		"Swiper",
+		"timestamptz",
+		"typeorm"
+	]
 }

@@ -20,7 +20,9 @@ export const TypeOrmModuleOptions: TypeOrmModuleAsyncOptions = {
 			],
 			synchronize: true,
 			socketPath: "/tmp/mysql.sock",
-			...(NODE_ENV === "DEVELOPMENT" ? { retryAttempts: 10, logging: true } : { logging: false }),
+			...(NODE_ENV === "DEVELOPMENT"
+				? { retryAttempts: 10, logging: true }
+				: { logging: false }),
 		};
 
 		return option;
