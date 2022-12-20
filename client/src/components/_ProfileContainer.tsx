@@ -31,7 +31,7 @@ const ProfileContainer: React.FunctionComponent<
 				<div className="grid md:grid-cols-2 my-24">
 					<UserInformation user={user} handleClick={handleClick} />
 					<ImageList
-						sx={{ width: 500, height: 450 }}
+						sx={{ width: 500, height: 450, margin: "0 auto" }}
 						variant="woven"
 						cols={3}
 						gap={8}

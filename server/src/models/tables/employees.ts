@@ -7,7 +7,7 @@ import {
 	OneToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm";
-import { Receiver } from "./message_recipients";
+import { Receiver } from "./message_receiver";
 import { Sender } from "./message_sender";
 
 @Entity()

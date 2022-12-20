@@ -1,16 +1,15 @@
-import { Products } from "./products";
 import {
 	BaseEntity,
 	Column,
 	CreateDateColumn,
 	Entity,
-	JoinTable,
-	ManyToMany,
+	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
-import { Users } from "./users";
 import { EventRole } from "../enums";
+import { NotificationToProductsAndUsers } from "./notificationToProductsAndUsers";
+import { SchedulesToProductsAndUsers } from "./schedulesToProductsAndUsers";
 
 @Entity()
 export class Notifications extends BaseEntity {
@@ -27,13 +26,18 @@ export class Notifications extends BaseEntity {
 	@Column()
 	message: string;
 
-	@ManyToMany(() => Users)
-	@JoinTable()
-	users: Users[];
+	@OneToMany(
+		() => NotificationToProductsAndUsers,
+		(notificationToProductsAndUsers) =>
+			notificationToProductsAndUsers.notification
+	)
+	notificationToProductsAndUsers!: NotificationToProductsAndUsers[];
 
-	@ManyToMany(() => Products)
-	@JoinTable()
-	products: Products[];
+	@OneToMany(
+		() => SchedulesToProductsAndUsers,
+		(schedulesToProductsAndUser) => schedulesToProductsAndUser.notification
+	)
+	schedulesToProductsAndUsers!: SchedulesToProductsAndUsers[];
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;

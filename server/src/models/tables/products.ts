@@ -1,19 +1,23 @@
-import { Favorites } from "./favorites";
 import { IsInt, Max, Min } from "class-validator";
 import {
-	Entity,
-	PrimaryGeneratedColumn,
-	Column,
-	JoinColumn,
-	OneToOne,
-	CreateDateColumn,
-	UpdateDateColumn,
-	OneToMany,
 	BaseEntity,
+	Column,
+	CreateDateColumn,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	OneToMany,
+	OneToOne,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn,
 } from "typeorm";
+import { Analysis } from "./analytsis";
 import { Categories } from "./categories";
 import { Comments } from "./comments";
+import { Favorites } from "./favorites";
+import { NotificationToProductsAndUsers } from "./notificationToProductsAndUsers";
 import { Orders } from "./orders";
+import { SchedulesToProductsAndUsers } from "./schedulesToProductsAndUsers";
 
 @Entity()
 export class Products extends BaseEntity {
@@ -54,8 +58,7 @@ export class Products extends BaseEntity {
 	@OneToMany(() => Comments, (comment) => comment.product)
 	comments: Comments[];
 
-	@OneToOne(() => Categories)
-	@JoinColumn()
+	@ManyToOne(() => Categories, (category) => category.products)
 	category: Categories;
 
 	@OneToMany(() => Favorites, (favorite) => favorite.product)
@@ -63,6 +66,22 @@ export class Products extends BaseEntity {
 
 	@OneToMany(() => Orders, (order) => order.product)
 	orders: Orders[];
+
+	@OneToMany(
+		() => NotificationToProductsAndUsers,
+		(notificationToProductsAndUsers) => notificationToProductsAndUsers.products
+	)
+	notificationToProductsAndUsers!: NotificationToProductsAndUsers[];
+
+	@OneToMany(
+		() => SchedulesToProductsAndUsers,
+		(schedulesToProductsAndUser) => schedulesToProductsAndUser.products
+	)
+	schedulesToProductsAndUsers!: SchedulesToProductsAndUsers[];
+
+	@OneToOne(() => Analysis)
+	@JoinColumn()
+	Analysis: Analysis;
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;

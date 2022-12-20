@@ -2,8 +2,6 @@ import {
 	BaseEntity,
 	CreateDateColumn,
 	Entity,
-	JoinTable,
-	ManyToMany,
 	ManyToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
@@ -19,9 +17,8 @@ export class Favorites extends BaseEntity {
 	@ManyToOne(() => Products, (product) => product.favorites)
 	product: Products;
 
-	@ManyToMany(() => Users)
-	@JoinTable()
-	users: Users[];
+	@ManyToOne(() => Users, (user) => user.favorites)
+	user: Users;
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;

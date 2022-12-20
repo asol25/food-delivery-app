@@ -2,26 +2,28 @@ import {
 	BaseEntity,
 	Column,
 	Entity,
-	JoinTable,
-	ManyToMany,
+	OneToMany,
 	PrimaryGeneratedColumn,
 } from "typeorm";
-import { Products } from "./products";
-import { Users } from "./users";
+import { SchedulesToProductsAndUsers } from "./schedulesToProductsAndUsers";
 
 @Entity()
 export class Schedules extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@ManyToMany(() => Users)
-	@JoinTable()
-	users: Users[];
-
-	@ManyToMany(() => Products)
-	@JoinTable()
-	products: Products[];
+	@OneToMany(
+		() => SchedulesToProductsAndUsers,
+		(schedulesToProductsAndUser) => schedulesToProductsAndUser.schedule
+	)
+	schedulesToProductsAndUsers!: SchedulesToProductsAndUsers[];
 
 	@Column({ type: "timestamptz" })
 	from: Date;
+
+	@Column({ type: "timestamptz", nullable: true })
+	ship!: Date;
+
+	@Column({ type: "timestamptz", nullable: true })
+	to!: Date;
 }

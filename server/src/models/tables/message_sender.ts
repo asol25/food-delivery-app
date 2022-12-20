@@ -16,7 +16,7 @@ export class Sender extends BaseEntity {
 	id: string;
 
 	@OneToMany(() => Messages, (msg) => msg.message_sender)
-	messagesIn: Messages[];
+	messagesOut: Messages[];
 
 	@Column({
 		type: "enum",

@@ -7,7 +7,8 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
-import { Users } from "./users";
+import { Receiver } from "./message_receiver";
+import { Sender } from "./message_sender";
 
 @Entity()
 export class Messages extends BaseEntity {
@@ -17,11 +18,11 @@ export class Messages extends BaseEntity {
 	@Column()
 	message: string;
 
-	@ManyToOne(() => Users, (snd) => snd.sender)
-	message_sender: Users;
+	@ManyToOne(() => Sender, (snd) => snd.messagesOut)
+	message_sender: Sender;
 
-	@ManyToOne(() => Users, (rcv) => rcv.receiver)
-	message_recipients: Users;
+	@ManyToOne(() => Receiver, (rcv) => rcv.messagesIn)
+	message_recipients: Receiver;
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;
