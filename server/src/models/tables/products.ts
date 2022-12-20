@@ -17,6 +17,7 @@ import { Comments } from "./comments";
 import { Favorites } from "./favorites";
 import { NotificationToProductsAndUsers } from "./notificationToProductsAndUsers";
 import { Orders } from "./orders";
+import { OrdersDetail } from "./orders_detail";
 import { SchedulesToProductsAndUsers } from "./schedulesToProductsAndUsers";
 
 @Entity()
@@ -64,8 +65,8 @@ export class Products extends BaseEntity {
 	@OneToMany(() => Favorites, (favorite) => favorite.product)
 	favorites: Favorites[];
 
-	@OneToMany(() => Orders, (order) => order.product)
-	orders: Orders[];
+	@OneToMany(() => OrdersDetail, (orderDetail) => orderDetail.product)
+	ordersDetail: OrdersDetail[];
 
 	@OneToMany(
 		() => NotificationToProductsAndUsers,
