@@ -5,6 +5,7 @@
 		"PAGENATION",
 		"Swiper",
 		"timestamptz",
-		"typeorm"
+		"typeorm",
+		"websockets"
 	]
 }
