@@ -5,7 +5,7 @@ import {
 	OneToMany,
 	PrimaryGeneratedColumn,
 } from "typeorm";
-import { SchedulesToProductsAndUsers } from "./schedulesToProductsAndUsers";
+import { SchedulesDetail } from "./schedulesDetail";
 
 @Entity()
 export class Schedules extends BaseEntity {
@@ -13,10 +13,10 @@ export class Schedules extends BaseEntity {
 	id: number;
 
 	@OneToMany(
-		() => SchedulesToProductsAndUsers,
-		(schedulesToProductsAndUser) => schedulesToProductsAndUser.schedule
+		() => SchedulesDetail,
+		(scheduleDetails) => scheduleDetails.schedule
 	)
-	schedulesToProductsAndUsers!: SchedulesToProductsAndUsers[];
+	scheduleDetails: SchedulesDetail[];
 
 	@Column({ type: "timestamptz" })
 	from: Date;

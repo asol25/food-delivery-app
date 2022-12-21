@@ -4,14 +4,12 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
-	ManyToMany,
 	ManyToOne,
 	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
-import { OrdersDetail } from "./orders_detail";
-import { Products } from "./products";
+import { OrdersDetail } from "./ordersDetail";
 import { Users } from "./users";
 
 @Entity()
@@ -31,6 +29,9 @@ export class Orders extends BaseEntity {
 
 	@ManyToOne(() => Users, (user) => user.orders)
 	user: Users;
+
+	@Column()
+	userId: number;
 
 	@OneToMany(() => OrdersDetail, (orderDetail) => orderDetail.order)
 	orderDetails: OrdersDetail[];

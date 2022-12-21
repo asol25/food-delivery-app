@@ -8,8 +8,8 @@ import {
 	UpdateDateColumn,
 } from "typeorm";
 import { EventRole } from "../enums";
-import { NotificationToProductsAndUsers } from "./notificationToProductsAndUsers";
-import { SchedulesToProductsAndUsers } from "./schedulesToProductsAndUsers";
+import { NotificationsDetail } from "./notificationsDetail";
+import { SchedulesDetail } from "./schedulesDetail";
 
 @Entity()
 export class Notifications extends BaseEntity {
@@ -27,17 +27,16 @@ export class Notifications extends BaseEntity {
 	message: string;
 
 	@OneToMany(
-		() => NotificationToProductsAndUsers,
-		(notificationToProductsAndUsers) =>
-			notificationToProductsAndUsers.notification
+		() => NotificationsDetail,
+		(notificationsDetail) => notificationsDetail.notification
 	)
-	notificationToProductsAndUsers!: NotificationToProductsAndUsers[];
+	notificationsDetail!: NotificationsDetail[];
 
 	@OneToMany(
-		() => SchedulesToProductsAndUsers,
-		(schedulesToProductsAndUser) => schedulesToProductsAndUser.notification
+		() => SchedulesDetail,
+		(scheduleDetail) => scheduleDetail.notification
 	)
-	schedulesToProductsAndUsers!: SchedulesToProductsAndUsers[];
+	schedulesDetail!: SchedulesDetail[];
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;

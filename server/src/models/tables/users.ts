@@ -16,9 +16,9 @@ import { Comments } from "./comments";
 import { Favorites } from "./favorites";
 import { Receiver } from "./message_receiver";
 import { Sender } from "./message_sender";
-import { NotificationToProductsAndUsers } from "./notificationToProductsAndUsers";
+import { NotificationsDetail } from "./notificationsDetail";
 import { Orders } from "./orders";
-import { SchedulesToProductsAndUsers } from "./schedulesToProductsAndUsers";
+import { SchedulesDetail } from "./schedulesDetail";
 
 @Entity()
 export class Users extends BaseEntity {
@@ -59,16 +59,13 @@ export class Users extends BaseEntity {
 	sender: Sender;
 
 	@OneToMany(
-		() => NotificationToProductsAndUsers,
-		(notificationToProductsAndUsers) => notificationToProductsAndUsers.user
+		() => NotificationsDetail,
+		(notificationsDetail) => notificationsDetail.user
 	)
-	notificationToProductsAndUsers!: NotificationToProductsAndUsers[];
+	notificationsDetail!: NotificationsDetail[];
 
-	@OneToMany(
-		() => SchedulesToProductsAndUsers,
-		(schedulesToProductsAndUser) => schedulesToProductsAndUser.user
-	)
-	schedulesToProductsAndUsers!: SchedulesToProductsAndUsers[];
+	@OneToMany(() => SchedulesDetail, (scheduleDetail) => scheduleDetail.user)
+	schedulesDetail!: SchedulesDetail[];
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;

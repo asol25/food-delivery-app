@@ -11,14 +11,13 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
-import { Analysis } from "./analytsis";
+import { Analysis } from "./analysis";
 import { Categories } from "./categories";
 import { Comments } from "./comments";
 import { Favorites } from "./favorites";
-import { NotificationToProductsAndUsers } from "./notificationToProductsAndUsers";
-import { Orders } from "./orders";
-import { OrdersDetail } from "./orders_detail";
-import { SchedulesToProductsAndUsers } from "./schedulesToProductsAndUsers";
+import { NotificationsDetail } from "./notificationsDetail";
+import { OrdersDetail } from "./ordersDetail";
+import { SchedulesDetail } from "./schedulesDetail";
 
 @Entity()
 export class Products extends BaseEntity {
@@ -59,26 +58,30 @@ export class Products extends BaseEntity {
 	@OneToMany(() => Comments, (comment) => comment.product)
 	comments: Comments[];
 
+	@Column()
+	categoryId: number;
+
 	@ManyToOne(() => Categories, (category) => category.products)
+	@JoinColumn({ name: "categoryId" })
 	category: Categories;
 
 	@OneToMany(() => Favorites, (favorite) => favorite.product)
 	favorites: Favorites[];
 
 	@OneToMany(() => OrdersDetail, (orderDetail) => orderDetail.product)
-	ordersDetail: OrdersDetail[];
+	ordersDetail!: OrdersDetail[];
 
 	@OneToMany(
-		() => NotificationToProductsAndUsers,
-		(notificationToProductsAndUsers) => notificationToProductsAndUsers.products
+		() => NotificationsDetail,
+		(notificationsDetail) => notificationsDetail.product
 	)
-	notificationToProductsAndUsers!: NotificationToProductsAndUsers[];
+	notificationsDetail!: NotificationsDetail[];
 
 	@OneToMany(
-		() => SchedulesToProductsAndUsers,
-		(schedulesToProductsAndUser) => schedulesToProductsAndUser.products
+		() => SchedulesDetail,
+		(schedulesDetail) => schedulesDetail.product
 	)
-	schedulesToProductsAndUsers!: SchedulesToProductsAndUsers[];
+	schedulesDetail!: SchedulesDetail[];
 
 	@OneToOne(() => Analysis)
 	@JoinColumn()
