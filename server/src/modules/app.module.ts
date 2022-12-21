@@ -1,3 +1,4 @@
+import { CategoriesModule } from "./categories.module";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -11,6 +12,7 @@ import { ProductsModule } from "./products.module";
 		TypeOrmModule.forRootAsync(TypeOrmModuleOptions),
 		EventsModule,
 		ProductsModule,
+		CategoriesModule,
 	],
 	controllers: [],
 	providers: [],

@@ -19,6 +19,15 @@ import { NotificationsDetail } from "./notificationsDetail";
 import { OrdersDetail } from "./ordersDetail";
 import { SchedulesDetail } from "./schedulesDetail";
 
+export class ColumnNumericTransformer {
+	to(data: number): number {
+		return data;
+	}
+	from(data: string): number {
+		return parseFloat(data);
+	}
+}
+
 @Entity()
 export class Products extends BaseEntity {
 	@PrimaryGeneratedColumn()
@@ -39,9 +48,13 @@ export class Products extends BaseEntity {
 	@Max(5)
 	rating!: number;
 
-	@Column({ default: 3 })
+	@Column("numeric", {
+		precision: 7,
+		scale: 2,
+		transformer: new ColumnNumericTransformer(),
+	})
 	@IsInt()
-	@Min(3)
+	@Min(0)
 	cost: number;
 
 	@Column({ default: 5 })

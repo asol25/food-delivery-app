@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsNumber, Max, Min } from "class-validator";
-import { Categories } from "../tables/categories";
 
 export class CreateProductDto {
 	@ApiProperty()
