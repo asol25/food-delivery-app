@@ -16,8 +16,14 @@ const FoodContainer: React.FunctionComponent<IFoodContainerProps> = (props) => {
 		<>
 			<section className="section">
 				<div className=" bg-orange-100 px-4 py-1 rounded-full w-fit flex items-center gap-2 section-container ">
-					<h1 className="capitalize text-base text-orange-500 font-semibold">{title} food</h1>
-					<img className="w-8 h-8 object-contain rounded-full" src={FoodIcon} alt="_food_icon" />
+					<h1 className="capitalize text-base text-orange-500 font-semibold">
+						{title} food
+					</h1>
+					<img
+						className="w-8 h-8 object-contain rounded-full"
+						src={FoodIcon}
+						alt="_food_icon"
+					/>
 				</div>
 
 				<Swiper
@@ -48,7 +54,7 @@ const FoodContainer: React.FunctionComponent<IFoodContainerProps> = (props) => {
 					{products &&
 						products.map((product: IProducts) => (
 							<SwiperSlide key={product.id}>
-								<FoodProducts product={product} />
+								<FoodProducts product={product} key={product.id} />
 							</SwiperSlide>
 						))}
 				</Swiper>

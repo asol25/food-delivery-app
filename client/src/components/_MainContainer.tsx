@@ -7,12 +7,12 @@ import FoodContainer from "./FoodContainer/_FoodContainer";
 interface IMainContainerProps {}
 
 const MainContainer: React.FunctionComponent<IMainContainerProps> = () => {
-	const { products } = ProductsHook();
+	const { products, productsFavorite } = ProductsHook();
 	return (
 		<>
 			<main className="main">
 				<BannerContainer />
-				<FoodContainer title={"Favorite"} products={products} />
+				<FoodContainer title={"Favorite"} products={productsFavorite} />
 				<FoodContainer title={"Top Sales"} products={products} />
 				<FoodContainer title={"Discount"} products={products} />
 				<CategoriesContainer products={products} />
