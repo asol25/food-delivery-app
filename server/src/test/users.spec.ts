@@ -54,4 +54,31 @@ describe("Users Testing", () => {
 			).toBe(result);
 		});
 	});
+
+	describe("create users", () => {
+		it("should return an array of user", async () => {
+			const result = {
+				id: 1,
+				name: "John Doe",
+				email: "john@doe.com",
+				phone: 84375954,
+				addresses: null,
+				createdAt: new Date(),
+				updatedAt: new Date(),
+			};
+
+			jest
+				.spyOn(service, "createUser")
+				.mockImplementation(() => Promise.resolve(result as Users));
+
+			expect(
+				await controller.createUser({
+					name: "John Doe",
+					email: "john@doe.com",
+					phone: 84375954,
+					addressesId: 1,
+				})
+			).toBe(result);
+		});
+	});
 });
