@@ -1,3 +1,4 @@
+import { Users } from "./../models/tables/users";
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateUserDto } from "./../models/dtos/create-users.dto";
@@ -31,7 +32,7 @@ export class UsersService {
 		}
 	}
 
-	async createUser(createUserDto: CreateUserDto) {
+	async createUser(createUserDto: CreateUserDto): Promise<Users> {
 		try {
 			const user = await this.usersRepository.createUser(createUserDto);
 			return user;

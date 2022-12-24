@@ -6,6 +6,7 @@ import { TypeOrmModuleOptions } from "../config/typeorm";
 import { EventsModule } from "./events.module";
 import { ProductsModule } from "./products.module";
 import { UsersModule } from "./users.module";
+import { AddressesModule } from "./addresses.module";
 
 @Module({
 	imports: [
@@ -15,6 +16,7 @@ import { UsersModule } from "./users.module";
 		ProductsModule,
 		CategoriesModule,
 		UsersModule,
+		AddressesModule,
 	],
 	controllers: [],
 	providers: [],

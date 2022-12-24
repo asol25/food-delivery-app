@@ -5,7 +5,7 @@ import { AddressesRepository } from "./../models/repositories/addresses.reposito
 import { Addresses } from "./../models/tables/addresses";
 import { AddressesService } from "./../providers/addresses.service";
 
-describe("Users Testing", () => {
+describe("Addresses Testing", () => {
 	let service: AddressesService;
 	let controller: AddressesController;
 	let repository: AddressesRepository;
