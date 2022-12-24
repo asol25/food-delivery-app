@@ -1,10 +1,13 @@
 {
 	"cSpell.words": [
 		"dtos",
+		"flowtype",
 		"linebreak",
 		"nestjs",
 		"PAGENATION",
+		"reduxjs",
 		"Swiper",
+		"tailwindcss",
 		"timestamptz",
 		"typeorm",
 		"websockets"

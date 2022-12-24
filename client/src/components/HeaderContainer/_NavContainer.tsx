@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useAuth0 } from "@auth0/auth0-react";
 import * as React from "react";
-import { Link } from "react-router-dom";
 import LoginButton from "./_LoginButton";
 import LogoutButton from "./_LogoutButton";
 

@@ -3,7 +3,7 @@ import * as React from "react";
 
 interface IEditProfileProps {}
 
-const EditProfile: React.FunctionComponent<IEditProfileProps> = (props) => (
+const EditProfile: React.FunctionComponent<IEditProfileProps> = () => (
 	<>
 		<section className="container">
 			<header>Edit Profile Account</header>
@@ -57,7 +57,7 @@ const EditProfile: React.FunctionComponent<IEditProfileProps> = (props) => (
 						<input type="text" placeholder="Enter your city" required />
 					</div>
 				</div>
-				<button>Save</button>
+				<button type="button">Save</button>
 			</form>
 		</section>
 	</>

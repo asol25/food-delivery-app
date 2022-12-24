@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as apis from "../apis/index";
 import { ProductsType } from "../types";
-import { IProducts } from "../types/products";
 
 export const ProductsHook = () => {
 	const [products, setProducts] = React.useState<ProductsType.IProducts[]>([]);

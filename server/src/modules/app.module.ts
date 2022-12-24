@@ -5,6 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { TypeOrmModuleOptions } from "../config/typeorm";
 import { EventsModule } from "./events.module";
 import { ProductsModule } from "./products.module";
+import { UsersModule } from "./users.module";
 
 @Module({
 	imports: [
@@ -13,6 +14,7 @@ import { ProductsModule } from "./products.module";
 		EventsModule,
 		ProductsModule,
 		CategoriesModule,
+		UsersModule,
 	],
 	controllers: [],
 	providers: [],

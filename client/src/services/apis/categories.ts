@@ -1,3 +1,3 @@
-export const getProducts = async (_limit: number) => {
+export const getProducts = async () => {
 	return [];
 };

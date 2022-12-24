@@ -3,6 +3,7 @@ import { Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import FoodIcon from "../../img/favorite_food_icon.png";
 import { IProducts } from "../../services/types/products";
+import CircularUnderLoad from "../CircularUnderLoad";
 import FoodProducts from "./_FoodProducts";
 
 interface IFoodContainerProps {
@@ -26,6 +27,7 @@ const FoodContainer: React.FunctionComponent<IFoodContainerProps> = (props) => {
 					/>
 				</div>
 
+				{/* Desktop */}
 				<Swiper
 					slidesPerView={5}
 					spaceBetween={20}
@@ -35,14 +37,18 @@ const FoodContainer: React.FunctionComponent<IFoodContainerProps> = (props) => {
 					modules={[Pagination]}
 					className="mySwiper hidden md:block"
 				>
-					{products &&
+					{products.length > 0 ? (
 						products.map((product: IProducts) => (
 							<SwiperSlide key={product.id}>
 								<FoodProducts product={product} />
 							</SwiperSlide>
-						))}
+						))
+					) : (
+						<CircularUnderLoad />
+					)}
 				</Swiper>
 
+				{/* Mobile */}
 				<Swiper
 					spaceBetween={30}
 					pagination={{
@@ -51,12 +57,15 @@ const FoodContainer: React.FunctionComponent<IFoodContainerProps> = (props) => {
 					modules={[Pagination]}
 					className="mySwiper block md:hidden"
 				>
-					{products &&
+					{products.length > 0 ? (
 						products.map((product: IProducts) => (
 							<SwiperSlide key={product.id}>
-								<FoodProducts product={product} key={product.id} />
+								<FoodProducts product={product} />
 							</SwiperSlide>
-						))}
+						))
+					) : (
+						<CircularUnderLoad />
+					)}
 				</Swiper>
 			</section>
 		</>

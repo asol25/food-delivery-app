@@ -38,7 +38,11 @@ export class Users extends BaseEntity {
 	@Max(11)
 	phone: number;
 
+	@Column({ nullable: true })
+	addressesId!: number;
+
 	@ManyToOne(() => Addresses, (addresses) => addresses.users)
+	@JoinColumn({ name: "addressesId" })
 	addresses: Addresses;
 
 	@OneToMany(() => Comments, (comment) => comment.users)

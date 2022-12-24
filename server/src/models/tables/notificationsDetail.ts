@@ -5,7 +5,6 @@ import {
 	JoinColumn,
 	ManyToOne,
 	PrimaryColumn,
-	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
 import { Notifications } from "./notifications";

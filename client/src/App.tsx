@@ -1,5 +1,4 @@
 import "./App.css";
-import HeaderContainer from "./components/HeaderContainer/_HeaderContainer";
 // eslint-disable-next-line import/no-unresolved
 import "swiper/css";
 // eslint-disable-next-line import/no-unresolved

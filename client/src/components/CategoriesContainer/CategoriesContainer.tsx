@@ -2,22 +2,29 @@ import * as React from "react";
 import FoodIcon from "../../img/favorite_food_icon.png";
 import { IProducts } from "../../services/types/products";
 import FoodProducts from "../FoodContainer/_FoodProducts";
-import CategoriesMenu from "./CategoriesMenu";
 import CategoriesMenuMobile from "./CategoriesMenuMobile";
 
 interface ICategoriesContainerProps {
 	products: IProducts[];
 }
 
-const CategoriesContainer: React.FunctionComponent<ICategoriesContainerProps> = (props) => {
+const CategoriesContainer: React.FunctionComponent<
+	ICategoriesContainerProps
+> = (props) => {
 	const { products } = props;
 
 	return (
 		<>
 			<div className="section" id="menu">
 				<div className=" bg-orange-100 px-4 py-1 rounded-full w-fit flex items-center gap-2 section-container">
-					<h1 className="capitalize text-base text-orange-500 font-semibold">Categories Food</h1>
-					<img className="w-8 h-8 object-contain rounded-full" src={FoodIcon} alt="_food_icon" />
+					<h1 className="capitalize text-base text-orange-500 font-semibold">
+						Categories Food
+					</h1>
+					<img
+						className="w-8 h-8 object-contain rounded-full"
+						src={FoodIcon}
+						alt="_food_icon"
+					/>
 				</div>
 				{/* 
 				<div className="md:flex md:flex-row items-center justify-around hidden">

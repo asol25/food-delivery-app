@@ -1,8 +1,10 @@
+/* eslint-disable react/button-has-type */
 import { User } from "@auth0/auth0-react";
 import * as React from "react";
 
 interface IUserInformationProps {
 	user: User | undefined;
+	// eslint-disable-next-line no-unused-vars
 	handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -21,12 +23,13 @@ const UserInformation: React.FunctionComponent<IUserInformationProps> = (
 						</div>
 						<h2 className="flex items-center fle-row gap-3 justify-center">
 							{user?.name}
-							<span
-								onClick={handleClick}
+							<button
+								type="button"
+								onClick={(event) => handleClick(event)}
 								className="bg-[black] text-white text-sm py-1 px-3 rounded-lg cursor-pointer"
 							>
 								Edit
-							</span>
+							</button>
 						</h2>
 						<p>UX/UI Designer</p>
 						<p>{user?.email}</p>
