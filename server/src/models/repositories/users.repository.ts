@@ -1,4 +1,9 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { UpdateStatusUsersDto } from "./../dtos/update-users-status.dto";
+import {
+	Injectable,
+	InternalServerErrorException,
+	NotFoundException,
+} from "@nestjs/common";
 import { DataSource, Repository } from "typeorm";
 import { PaginatedResult } from "../dtos/paginated-result.dto";
 import { CreateUserDto } from "./../dtos/create-users.dto";
@@ -42,6 +47,27 @@ export class UsersRepository extends Repository<Users> {
 		user.phone = phone;
 		user.addressesId = addressesId;
 
+		try {
+			await user.save();
+		} catch (error) {
+			throw new InternalServerErrorException();
+		}
+
+		return user;
+	}
+
+	async updateStatusUser(updateStatusUsersDto: UpdateStatusUsersDto) {
+		const { userId, status } = updateStatusUsersDto;
+
+		const user = await this.findOne({
+			where: {
+				id: userId,
+			},
+		});
+
+		if (this.hasId(user) === false) throw new NotFoundException();
+
+		user.status = status;
 		try {
 			await user.save();
 		} catch (error) {

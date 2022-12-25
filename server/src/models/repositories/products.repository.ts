@@ -31,6 +31,7 @@ export class ProductsRepository extends Repository<Products> {
 		const query = this.createQueryBuilder("product");
 
 		const totalCount = await query.getCount();
+		query.leftJoinAndSelect("product.category", "category");
 		query.offset((page - 1) * limit);
 		query.limit(limit);
 

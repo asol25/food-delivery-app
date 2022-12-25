@@ -10,10 +10,10 @@ export class CreateUserDto {
 	readonly email: string;
 
 	@ApiProperty()
-	@IsInt()
-	@Min(8)
-	@Max(11)
-	readonly phone: number;
+	readonly phone: string;
+
+	@ApiProperty({ nullable: true })
+	readonly picture: string;
 
 	@ApiProperty()
 	@IsNotEmpty()

@@ -1,3 +1,4 @@
+import { UpdateStatusUsersDto } from "./../models/dtos/update-users-status.dto";
 import { Users } from "./../models/tables/users";
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -35,6 +36,21 @@ export class UsersService {
 	async createUser(createUserDto: CreateUserDto): Promise<Users> {
 		try {
 			const user = await this.usersRepository.createUser(createUserDto);
+			return user;
+		} catch (error) {
+			this.logger.error(error);
+			throw error;
+		}
+	}
+
+	async updateStatusUser(
+		updateStatusUsersDto: UpdateStatusUsersDto
+	): Promise<Users> {
+		try {
+			const user = await this.usersRepository.updateStatusUser(
+				updateStatusUsersDto
+			);
+
 			return user;
 		} catch (error) {
 			this.logger.error(error);

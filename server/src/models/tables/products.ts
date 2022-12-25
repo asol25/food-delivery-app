@@ -39,6 +39,9 @@ export class Products extends BaseEntity {
 	@Column()
 	desc: string;
 
+	@Column({ nullable: true })
+	status!: string;
+
 	@Column()
 	thumbnail: string;
 
