@@ -91,7 +91,7 @@ export default function ShopFilterSidebar({
 		return () => {
 			isChecked = false;
 		};
-	}, [filterCategories]);
+	}, []);
 
 	return (
 		<>
