@@ -1,3 +1,4 @@
+import { UpdateProductsDto } from "./../dtos/update-products.dto";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { DataSource, Repository } from "typeorm";
 import { CreateProductDto } from "../dtos/create-product.dto";
@@ -57,6 +58,32 @@ export class ProductsRepository extends Repository<Products> {
 		product.cost = cost;
 		product.sale = sale;
 		product.categoryId = category;
+
+		try {
+			await product.save();
+		} catch (error) {
+			throw new InternalServerErrorException();
+		}
+
+		return product;
+	}
+
+	async updateProduct(updateProductsDto: UpdateProductsDto): Promise<Products> {
+		const { productId, title, thumbnail, cost, desc, sale, category } =
+			updateProductsDto;
+
+		const product = await this.findOne({
+			where: {
+				id: productId,
+			},
+		});
+
+		product.categoryId = category;
+		product.cost = cost;
+		product.title = title;
+		product.desc = desc;
+		product.thumbnail = thumbnail;
+		product.sale = sale;
 
 		try {
 			await product.save();

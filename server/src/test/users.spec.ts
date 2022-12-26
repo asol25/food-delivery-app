@@ -27,7 +27,7 @@ describe("Users Testing", () => {
 						id: 1,
 						name: "John Doe",
 						email: "john@doe.com",
-						phone: 84375954,
+						phone: "841284375954",
 						addresses: null,
 						createdAt: new Date(),
 						updatedAt: new Date(),
@@ -61,7 +61,9 @@ describe("Users Testing", () => {
 				id: 1,
 				name: "John Doe",
 				email: "john@doe.com",
-				phone: 84375954,
+				picture:
+					"https://upcdn.io/FW25azq/raw/uploads/2022/12/25/95c95558-35JA.png",
+				phone: "84375954",
 				addresses: null,
 				createdAt: new Date(),
 				updatedAt: new Date(),
@@ -75,7 +77,9 @@ describe("Users Testing", () => {
 				await controller.createUser({
 					name: "John Doe",
 					email: "john@doe.com",
-					phone: 84375954,
+					picture:
+						"https://upcdn.io/FW25azq/raw/uploads/2022/12/25/95c95558-35JA.png",
+					phone: "841284375954",
 					addressesId: 1,
 				})
 			).toBe(result);

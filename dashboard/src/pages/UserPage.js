@@ -1,29 +1,29 @@
-import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 // @mui
 import {
-  Card,
-  Table,
-  Stack,
-  Paper,
   Avatar,
   Button,
-  Popover,
+  Card,
   Checkbox,
-  TableRow,
+  Container,
+  IconButton,
   MenuItem,
+  Paper,
+  Popover,
+  Stack,
+  Table,
   TableBody,
   TableCell,
-  Container,
-  Typography,
-  IconButton,
   TableContainer,
   TablePagination,
+  TableRow,
+  Typography,
 } from '@mui/material';
 // components
-import Label from '../components/label';
 import Iconify from '../components/iconify';
+import Label from '../components/label';
 import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
@@ -334,11 +334,6 @@ export default function UserPage() {
           },
         }}
       >
-        <MenuItem>
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Edit
-        </MenuItem>
-
         <MenuItem sx={{ color: 'error.main' }} onClick={handleRequestChangeStatus}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
           Banned

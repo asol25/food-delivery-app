@@ -1,6 +1,7 @@
+import { UpdateProductsDto } from "./../models/dtos/update-products.dto";
 import { GetProductsPaginationDto } from "src/models/dtos/get-products-pagination.dto";
 import { CreateProductDto } from "./../models/dtos/create-product.dto";
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { GetProductsFilterDto } from "src/models/dtos/get-product-filter.dto";
 import { ProductsService } from "./../providers/products.service";
@@ -32,5 +33,10 @@ export class ProductsController {
 	@Post("create/product/")
 	createProduct(@Body() createProductDto: CreateProductDto) {
 		return this.productsService.createProduct(createProductDto);
+	}
+
+	@Put("update/product/")
+	updateProduct(@Body() updateProductsDto: UpdateProductsDto) {
+		return this.productsService.updateProduct(updateProductsDto);
 	}
 }

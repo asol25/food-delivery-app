@@ -42,7 +42,7 @@ export class Products extends BaseEntity {
 	@Column({ nullable: true })
 	status!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	thumbnail: string;
 
 	@Column({ default: 0 })

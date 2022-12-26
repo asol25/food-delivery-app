@@ -1,3 +1,4 @@
+import { UpdateProductsDto } from "./../models/dtos/update-products.dto";
 import { CreateProductDto } from "./../models/dtos/create-product.dto";
 import { GetProductsFilterDto } from "./../models/dtos/get-product-filter.dto";
 import { Products } from "./../models/tables/products";
@@ -77,6 +78,19 @@ export class ProductsService {
 		try {
 			const product: Products = await this.productsRepository.createProduct(
 				createProductDto
+			);
+
+			return product;
+		} catch (error) {
+			this.logger.error(error.message);
+			throw error;
+		}
+	}
+
+	async updateProduct(updateProductDto: UpdateProductsDto) {
+		try {
+			const product: Products = await this.productsRepository.updateProduct(
+				updateProductDto
 			);
 
 			return product;

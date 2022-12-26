@@ -7,21 +7,20 @@ import Iconify from '../../../components/iconify';
 // ----------------------------------------------------------------------
 
 const SORT_BY_OPTIONS = [
-  { value: 'featured', label: 'Featured' },
-  { value: 'newest', label: 'Newest' },
-  { value: 'priceDesc', label: 'Price: High-Low' },
-  { value: 'priceAsc', label: 'Price: Low-High' },
+  { value: 'priceDesc', label: 'Price: High-Low', bool: true },
+  { value: 'priceAsc', label: 'Price: Low-High', bool: false },
 ];
 
-export default function ShopProductSort() {
+export default function ShopProductSort({ onFilterSort }) {
   const [open, setOpen] = useState(null);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (bool) => {
     setOpen(null);
+    onFilterSort(bool);
   };
 
   return (
@@ -34,7 +33,7 @@ export default function ShopProductSort() {
       >
         Sort By:&nbsp;
         <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
-          Newest
+          None
         </Typography>
       </Button>
       <Menu
@@ -49,7 +48,7 @@ export default function ShopProductSort() {
           <MenuItem
             key={option.value}
             selected={option.value === 'newest'}
-            onClick={handleClose}
+            onClick={() => handleClose(option.bool)}
             sx={{ typography: 'body2' }}
           >
             {option.label}

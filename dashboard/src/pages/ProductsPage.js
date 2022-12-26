@@ -1,23 +1,76 @@
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect } from 'react';
 // @mui
-import { Container, Stack, Typography } from '@mui/material';
+import { Button, Container, Stack, Typography } from '@mui/material';
 // components
-import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
 // mock
-import * as apisProducts from '../_mock/products';
 
+import Iconify from '../components/iconify';
+import { ProductCartWidget, ProductFilterSidebar, ProductList, ProductSort } from '../sections/@dashboard/products';
+import CreateProducts from '../sections/@dashboard/products/CreateProduct';
+import * as apisProducts from '../_mock/products';
 // ----------------------------------------------------------------------
 
 export default function ProductsPage() {
   const [openFilter, setOpenFilter] = useState(false);
   const [products, setProducts] = useState([]);
+  const [filterCategory, setFilterCategory] = useState('');
+  const [filterPrice, setFilterPrice] = useState({ value: '', price: '' });
+  const [sortProducts, setSortProducts] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
   const handleOpenFilter = () => {
     setOpenFilter(true);
   };
 
+  const cleanFilter = () => {
+    setFilterCategory('');
+    setFilterPrice('');
+    setOpenFilter(false);
+  };
+
   const handleCloseFilter = () => {
     setOpenFilter(false);
+  };
+
+  const handleFilterCategory = (key) => {
+    setFilterCategory(key);
+  };
+
+  const handleFilterPrice = (key) => {
+    setFilterPrice(key);
+  };
+
+  const applyFiller = (options) => {
+    const { products, filterCategory, filterPrice, sortProducts } = options;
+    let productsFilter = products;
+
+    if (filterCategory) {
+      productsFilter = productsFilter.filter((product) => product.categoryId === filterCategory);
+    }
+
+    if (filterPrice.price) {
+      productsFilter = productsFilter.filter((product) => product.cost <= filterPrice.price);
+    }
+
+    if (sortProducts) {
+      productsFilter = productsFilter.sort((a, b) => a.cost - b.cost);
+      productsFilter = productsFilter.reverse();
+    } else {
+      productsFilter = productsFilter.sort((a, b) => a.cost - b.cost);
+    }
+    return productsFilter;
   };
 
   useEffect(() => {
@@ -37,6 +90,9 @@ export default function ProductsPage() {
       isChecked = false;
     };
   }, []);
+
+  const filterProducts = products ? applyFiller({ products, filterCategory, filterPrice, sortProducts }) : [];
+
   return (
     <>
       <Helmet>
@@ -44,9 +100,14 @@ export default function ProductsPage() {
       </Helmet>
 
       <Container>
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Products
-        </Typography>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+          <Typography variant="h4" gutterBottom>
+            Products
+          </Typography>
+          <Button onClick={handleClick} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+            New Products
+          </Button>
+        </Stack>
 
         <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="flex-end" sx={{ mb: 5 }}>
           <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
@@ -54,13 +115,28 @@ export default function ProductsPage() {
               openFilter={openFilter}
               onOpenFilter={handleOpenFilter}
               onCloseFilter={handleCloseFilter}
+              onFilterCategory={handleFilterCategory}
+              onFilterPrice={handleFilterPrice}
+              cleanFilter={cleanFilter}
+              stateFilterCategory={filterCategory}
+              stateFilterPrice={filterPrice}
             />
-            <ProductSort />
+            <ProductSort onFilterSort={setSortProducts} />
           </Stack>
         </Stack>
 
-        <ProductList products={products} />
+        {filterProducts && (
+          <ProductList products={products} filterProducts={filterProducts} setProducts={setProducts} />
+        )}
         <ProductCartWidget />
+        <CreateProducts
+          products={products}
+          onChangeProducts={setProducts}
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          handleClose={handleClose}
+        />
       </Container>
     </>
   );

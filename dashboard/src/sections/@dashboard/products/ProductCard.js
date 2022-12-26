@@ -28,9 +28,11 @@ const StyledProductImg = styled('img')({
 
 ShopProductCard.propTypes = {
   product: PropTypes.object,
+  setProducts: PropTypes.func.isRequired,
+  products: PropTypes.array.isRequired,
 };
 
-export default function ShopProductCard({ product }) {
+export default function ShopProductCard({ product, setProducts, products }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -42,34 +44,32 @@ export default function ShopProductCard({ product }) {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const idOpen = open ? 'simple-popover' : undefined;
 
-  const { rating, sale, thumbnail, title, cost, desc, status, category } = product;
+  const { id, rating, sale, thumbnail, title, cost, desc, status, category } = product;
   return (
     <Card>
       <Box sx={{ pt: '100%', position: 'relative' }}>
-        {status && (
-          <Label
-            variant="filled"
-            color={(status === 'sale' && 'error') || 'info'}
-            sx={{
-              zIndex: 9,
-              top: 16,
-              right: 16,
-              position: 'absolute',
-              textTransform: 'uppercase',
-            }}
-          >
-            {status}
-          </Label>
-        )}
+        <Label
+          variant="filled"
+          color={(sale && 'error') || 'info'}
+          sx={{
+            zIndex: 9,
+            top: 16,
+            right: 16,
+            position: 'absolute',
+            textTransform: 'uppercase',
+          }}
+        >
+          {sale ? 'Sale' : 'New'}
+        </Label>
         <StyledProductImg alt={title} src={thumbnail} />
       </Box>
 
       <Stack
         spacing={2}
         sx={{ p: 3, cursor: 'pointer' }}
-        aria-describedby={id}
+        aria-describedby={idOpen}
         variant="contained"
         onClick={handleClick}
       >
@@ -104,7 +104,7 @@ export default function ShopProductCard({ product }) {
         </Stack>
       </Stack>
       <Popover
-        id={id}
+        id={idOpen}
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
@@ -123,7 +123,7 @@ export default function ShopProductCard({ product }) {
             <Stack rowGap={3} width={{ xs: '100%', sm: '50%' }}>
               <Typography variant="h5">{title}</Typography>
               <Box>
-                <img src={thumbnail} width={'320px'} height={'320px'} alt={title} loading="lazy" />
+                <img className="dvsdsd" src={thumbnail} width={'320px'} height={'320px'} alt={title} loading="lazy" />
               </Box>
               <Typography variant="subtitle1">{desc}</Typography>
               <Stack direction="row" alignItems="center" width={200} justifyContent="space-between">
@@ -152,7 +152,7 @@ export default function ShopProductCard({ product }) {
                   <Typography variant="subtitle1" paddingRight={1}>
                     Category:{' '}
                   </Typography>
-                  {category.name}
+                  {category && category.name}
                 </ListItem>
                 <ListItem>
                   <Typography variant="subtitle1" paddingRight={1}>
@@ -212,7 +212,19 @@ export default function ShopProductCard({ product }) {
           <Typography variant="h5" paddingTop={5} paddingBottom={2}>
             Edit Product
           </Typography>
-          <EditProduct />
+          <EditProduct
+            id={id}
+            sale={sale}
+            thumbnail={thumbnail}
+            title={title}
+            cost={cost}
+            desc={desc}
+            status={status}
+            category={category}
+            setProducts={setProducts}
+            products={products}
+            handleClose={handleClose}
+          />
         </Container>
       </Popover>
     </Card>

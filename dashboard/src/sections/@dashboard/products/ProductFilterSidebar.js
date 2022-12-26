@@ -1,24 +1,23 @@
 import PropTypes from 'prop-types';
+import * as React from 'react';
 // @mui
 import {
   Box,
-  Radio,
-  Stack,
   Button,
-  Drawer,
-  Rating,
   Divider,
-  Checkbox,
-  FormGroup,
-  IconButton,
-  Typography,
-  RadioGroup,
+  Drawer,
   FormControlLabel,
+  IconButton,
+  Radio,
+  RadioGroup,
+  Rating,
+  Stack,
+  Typography,
 } from '@mui/material';
 // components
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-import { ColorMultiPicker } from '../../../components/color-utils';
+import * as apisCategories from '../../../_mock/categories';
 
 // ----------------------------------------------------------------------
 
@@ -28,13 +27,11 @@ export const SORT_BY_OPTIONS = [
   { value: 'priceDesc', label: 'Price: High-Low' },
   { value: 'priceAsc', label: 'Price: Low-High' },
 ];
-export const FILTER_GENDER_OPTIONS = ['Men', 'Women', 'Kids'];
-export const FILTER_CATEGORY_OPTIONS = ['All', 'Shose', 'Apparel', 'Accessories'];
 export const FILTER_RATING_OPTIONS = ['up4Star', 'up3Star', 'up2Star', 'up1Star'];
 export const FILTER_PRICE_OPTIONS = [
-  { value: 'below', label: 'Below $25' },
-  { value: 'between', label: 'Between $25 - $75' },
-  { value: 'above', label: 'Above $75' },
+  { value: 'below', label: 'Below $3', price: 3 },
+  { value: 'between', label: 'Between $5 - $7', price: 7 },
+  { value: 'above', label: 'Above $7', price: 30 },
 ];
 export const FILTER_COLOR_OPTIONS = [
   '#00AB55',
@@ -51,11 +48,46 @@ export const FILTER_COLOR_OPTIONS = [
 
 ShopFilterSidebar.propTypes = {
   openFilter: PropTypes.bool,
-  onOpenFilter: PropTypes.func,
-  onCloseFilter: PropTypes.func,
+  onOpenFilter: PropTypes.func.isRequired,
+  onCloseFilter: PropTypes.func.isRequired,
+  onFilterCategory: PropTypes.func.isRequired,
+  onFilterPrice: PropTypes.func.isRequired,
+  cleanFilter: PropTypes.func.isRequired,
+  stateFilterCategory: PropTypes.number.isRequired,
+  stateFilterPrice: PropTypes.number.isRequired,
 };
 
-export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFilter }) {
+export default function ShopFilterSidebar({
+  openFilter,
+  onOpenFilter,
+  onCloseFilter,
+  onFilterCategory,
+  onFilterPrice,
+  cleanFilter,
+  stateFilterCategory,
+  stateFilterPrice,
+}) {
+  const [filterCategories, setFilterCategories] = React.useState([]);
+
+  React.useEffect(() => {
+    let isChecked = true;
+    if (isChecked) {
+      const fetchCategories = async () => {
+        const response = await apisCategories.getCategories();
+        const { data, status } = await response;
+        if (status === 200 && data.length > 0) {
+          setFilterCategories(data);
+        }
+      };
+
+      fetchCategories();
+    }
+
+    return () => {
+      isChecked = false;
+    };
+  }, [filterCategories]);
+
   return (
     <>
       <Button disableRipple color="inherit" endIcon={<Iconify icon="ic:round-filter-list" />} onClick={onOpenFilter}>
@@ -85,37 +117,32 @@ export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFil
           <Stack spacing={3} sx={{ p: 3 }}>
             <div>
               <Typography variant="subtitle1" gutterBottom>
-                Gender
-              </Typography>
-              <FormGroup>
-                {FILTER_GENDER_OPTIONS.map((item) => (
-                  <FormControlLabel key={item} control={<Checkbox />} label={item} />
-                ))}
-              </FormGroup>
-            </div>
-
-            <div>
-              <Typography variant="subtitle1" gutterBottom>
-                Category
+                Categories
               </Typography>
               <RadioGroup>
-                {FILTER_CATEGORY_OPTIONS.map((item) => (
-                  <FormControlLabel key={item} value={item} control={<Radio />} label={item} />
-                ))}
+                {filterCategories.map((item) => {
+                  if (item.id === stateFilterCategory) {
+                    return (
+                      <FormControlLabel
+                        key={item.id}
+                        value={item.id}
+                        control={<Radio checked />}
+                        label={item.name}
+                        onClick={() => onFilterCategory(item.id)}
+                      />
+                    );
+                  }
+                  return (
+                    <FormControlLabel
+                      key={item.id}
+                      value={item.id}
+                      control={<Radio />}
+                      label={item.name}
+                      onClick={() => onFilterCategory(item.id)}
+                    />
+                  );
+                })}
               </RadioGroup>
-            </div>
-
-            <div>
-              <Typography variant="subtitle1" gutterBottom>
-                Colors
-              </Typography>
-              <ColorMultiPicker
-                name="colors"
-                selected={[]}
-                colors={FILTER_COLOR_OPTIONS}
-                onChangeColor={(color) => [].includes(color)}
-                sx={{ maxWidth: 38 * 4 }}
-              />
             </div>
 
             <div>
@@ -123,9 +150,32 @@ export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFil
                 Price
               </Typography>
               <RadioGroup>
-                {FILTER_PRICE_OPTIONS.map((item) => (
-                  <FormControlLabel key={item.value} value={item.value} control={<Radio />} label={item.label} />
-                ))}
+                {FILTER_PRICE_OPTIONS.map((item) => {
+                  if (item.value === stateFilterPrice.value) {
+                    return (
+                      <FormControlLabel
+                        key={item.value}
+                        value={item.value}
+                        control={<Radio checked />}
+                        label={item.label}
+                        onClick={() => {
+                          onFilterPrice({ value: item.value, price: item.price });
+                        }}
+                      />
+                    );
+                  }
+                  return (
+                    <FormControlLabel
+                      key={item.value}
+                      value={item.value}
+                      control={<Radio />}
+                      label={item.label}
+                      onClick={() => {
+                        onFilterPrice({ value: item.value, price: item.price });
+                      }}
+                    />
+                  );
+                })}
               </RadioGroup>
             </div>
 
@@ -162,7 +212,7 @@ export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFil
           </Stack>
         </Scrollbar>
 
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 3 }} onClick={cleanFilter}>
           <Button
             fullWidth
             size="large"

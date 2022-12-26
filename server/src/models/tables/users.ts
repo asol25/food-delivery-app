@@ -1,4 +1,4 @@
-import { IsBoolean, IsEmail, IsInt, Max, Min } from "class-validator";
+import { IsBoolean, IsEmail } from "class-validator";
 import {
 	BaseEntity,
 	Column,
