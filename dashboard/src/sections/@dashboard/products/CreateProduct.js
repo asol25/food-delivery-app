@@ -1,14 +1,15 @@
-import * as React from "react";
-import { Box, Button, List, ListItem, Stack } from "@mui/material";
+/* eslint-disable react/prop-types */
+import { Box, Button, List, ListItem, Stack, Typography } from "@mui/material";
 import PropTypes from "prop-types";
+import * as React from "react";
 // components
-import Popover from "@mui/material/Popover";
 // mock
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
+import { useForm } from "react-hook-form";
 import { UploadButton } from "react-uploader";
 import { Uploader } from "uploader";
 import * as apisCategories from "../../../_mock/categories";
@@ -50,53 +51,48 @@ const UploadFileComponent = ({ files }) =>
 		return (
 			<p key={fileUrl}>
 				<a href={fileUrl} target="_blank" rel="noreferrer">
-					{fileUrl}
+					Successful
 				</a>
 			</p>
 		);
 	});
 
-CreateProducts.prototype = {
-	onChangeProducts: PropTypes.func.isRequired,
-	id: PropTypes.string.isRequired,
-	open: PropTypes.bool.isRequired,
-	anchorEl: PropTypes.bool.isRequired,
-	handleClose: PropTypes.func.isRequired,
-};
+export default function CreateProducts(props) {
+	const { onChangeProducts, setAnchorEl } = props;
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm();
 
-export default function CreateProducts({
-	onChangeProducts,
-	id,
-	open,
-	anchorEl,
-	handleClose,
-}) {
 	const [categoryId, setCategoryId] = React.useState("");
 	const [categories, setCategories] = React.useState([]);
 	const [files, setFiles] = React.useState([]);
+
 	const handleChangeCategories = (event) => {
 		setCategoryId(event.target.value);
 	};
-	const [title, setTitle] = React.useState("");
-	const [cost, setCost] = React.useState(0);
-	const [sale, setSale] = React.useState(0);
-	const [thumbnail, setThumbnail] = React.useState("");
-	const [desc, setDesc] = React.useState("");
 
-	const handlSaving = async () => {
-		const sendData = {
-			title,
-			cost,
-			sale,
-			thumbnail,
-			desc,
-			category: categoryId,
-		};
-		const response = await apisProducts.createProducts(sendData);
-		const { data, status } = response;
-		if (status === 200) {
-			onChangeProducts((oldArray) => [data, ...oldArray]);
+	const onSubmit = (data) => {
+		if (files.length > 0) {
+			const sendData = {
+				title: data.TitleRequired,
+				cost: data.CostRequired,
+				sale: data.SaleRequired,
+				thumbnail: files[0].fileUrl,
+				desc: data.DescRequired,
+				category: categoryId,
+			};
+
+			handleSaving(sendData);
 		}
+	};
+
+	const handleSaving = async (sendData) => {
+		const response = await apisProducts.createProducts(sendData);
+		const { data } = response;
+		await onChangeProducts((oldArray) => [...oldArray, data]);
+		return setAnchorEl(null);
 	};
 
 	React.useEffect(() => {
@@ -120,16 +116,7 @@ export default function CreateProducts({
 
 	return (
 		<>
-			<Popover
-				id={id}
-				open={open}
-				anchorEl={anchorEl}
-				onClose={handleClose}
-				anchorOrigin={{
-					vertical: "top",
-					horizontal: "left",
-				}}
-			>
+			<form onSubmit={handleSubmit(onSubmit)}>
 				<Box sx={{ p: 2 }}>
 					<List>
 						<ListItem>
@@ -137,10 +124,12 @@ export default function CreateProducts({
 								<TextField
 									label="Title"
 									id="outlined-size-small"
-									defaultValue="Small"
 									size="small"
-									onChange={(event) => setTitle(event.target.value)}
+									{...register("TitleRequired", { required: true })}
 								/>
+								<Typography mt={1}>
+									{errors.TitleRequired && <span>This Title is required</span>}
+								</Typography>
 							</div>
 						</ListItem>
 						<ListItem>
@@ -148,10 +137,12 @@ export default function CreateProducts({
 								<TextField
 									label="Desc"
 									id="outlined-size-small"
-									defaultValue="Small"
 									size="small"
-									onChange={(event) => setDesc(event.target.value)}
+									{...register("DescRequired", { required: true })}
 								/>
+								<Typography mt={1}>
+									{errors.DescRequired && <span>This Desc is required</span>}
+								</Typography>
 							</div>
 						</ListItem>
 						<ListItem>
@@ -159,10 +150,15 @@ export default function CreateProducts({
 								<TextField
 									label="Cost"
 									id="outlined-size-small"
-									defaultValue="Small"
 									size="small"
-									onChange={(event) => setCost(event.target.value)}
+									type={"number"}
+									{...register("CostRequired", {
+										required: true,
+									})}
 								/>
+								<Typography mt={1}>
+									{errors.CostRequired && <span>This Cost is required</span>}
+								</Typography>
 							</div>
 						</ListItem>
 						<ListItem>
@@ -170,10 +166,15 @@ export default function CreateProducts({
 								<TextField
 									label="Sale"
 									id="outlined-size-small"
-									defaultValue="Small"
 									size="small"
-									onChange={(event) => setSale(event.target.value)}
+									type={"number"}
+									{...register("SaleRequired", {
+										required: true,
+									})}
 								/>
+								<Typography mt={1}>
+									{errors.SaleRequired && <span>This Sale is required</span>}
+								</Typography>
 							</div>
 						</ListItem>
 						<ListItem>
@@ -198,18 +199,30 @@ export default function CreateProducts({
 							</div>
 						</ListItem>
 						<ListItem>
-							<Stack flexDirection={"row"} gap={2}>
+							<Stack
+								flexDirection={"row"}
+								gap={2}
+								justifyContent={"space-between"}
+							>
 								{files.length ? (
 									<UploadFileComponent files={files} />
 								) : (
 									<UploadButtonComponent setFiles={setFiles} />
 								)}
-								<Button onClick={handlSaving}>Save</Button>
+								<Button type="submit">Save</Button>
 							</Stack>
 						</ListItem>
 					</List>
 				</Box>
-			</Popover>
+			</form>
 		</>
 	);
 }
+
+CreateProducts.prototype = {
+	onChangeProducts: PropTypes.func.isRequired,
+	id: PropTypes.string.isRequired,
+	open: PropTypes.bool.isRequired,
+	anchorEl: PropTypes.bool.isRequired,
+	handleClose: PropTypes.func.isRequired,
+};
