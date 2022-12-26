@@ -79,7 +79,7 @@ export default function ShopFilterSidebar({
 		if (isChecked) {
 			const fetchCategories = async () => {
 				const response = await apisCategories.getCategories();
-				const { data, status } = await response;
+				const { data, status } = response;
 				if (status === 200 && data.length > 0) {
 					setFilterCategories(data);
 				}

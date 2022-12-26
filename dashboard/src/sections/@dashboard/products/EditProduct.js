@@ -97,8 +97,8 @@ export default function EditProduct(props) {
 			category: categoryId || category.id,
 		};
 		try {
-			const save = apisProducts.updateProducts(sendData);
-			const { data, status } = await save;
+			const save = await apisProducts.updateProducts(sendData);
+			const { data, status } = save;
 			if (status === 200) {
 				setProducts(
 					products.map((item) => (item.id === data.id ? (item = data) : item))
