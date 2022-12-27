@@ -16,7 +16,9 @@ export class AddressesRepository extends Repository<Addresses> {
 		const { userId } = getAddressesFilterUser;
 		const address = await this.findOne({
 			where: {
-				userId: userId,
+				users: {
+					id: userId,
+				},
 			},
 		});
 
@@ -24,10 +26,9 @@ export class AddressesRepository extends Repository<Addresses> {
 	}
 
 	async createAddresses(createAddressesDto: CreateAddressesDto) {
-		const { userId, addresses_one, addresses_two } = createAddressesDto;
+		const { addresses_one, addresses_two } = createAddressesDto;
 
 		const addresses = new Addresses();
-		addresses.userId = userId;
 		addresses.addresses_one = addresses_one;
 		addresses.addresses_two = addresses_two;
 
@@ -45,7 +46,9 @@ export class AddressesRepository extends Repository<Addresses> {
 
 		const addresses = await this.findOne({
 			where: {
-				userId: userId,
+				users: {
+					id: userId,
+				},
 			},
 		});
 

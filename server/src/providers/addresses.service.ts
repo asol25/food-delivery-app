@@ -42,14 +42,6 @@ export class AddressesService {
 		createAddressesDto: CreateAddressesDto
 	): Promise<Addresses> {
 		try {
-			const user = await this.addressesRepository.findOne({
-				where: {
-					userId: createAddressesDto.userId,
-				},
-			});
-
-			if (this.addressesRepository.hasId(user) === true)
-				throw new BadRequestException("UserId invalid");
 			const addresses = await this.addressesRepository.createAddresses(
 				createAddressesDto
 			);
@@ -67,7 +59,9 @@ export class AddressesService {
 		try {
 			const user = await this.addressesRepository.findOne({
 				where: {
-					userId: updateAddressesDto.userId,
+					users: {
+						id: updateAddressesDto.userId,
+					},
 				},
 			});
 

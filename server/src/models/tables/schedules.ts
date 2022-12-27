@@ -18,12 +18,12 @@ export class Schedules extends BaseEntity {
 	)
 	scheduleDetails: SchedulesDetail[];
 
-	@Column({ type: "timestamptz" })
+	@Column({ type: "timestamp" })
 	from: Date;
 
-	@Column({ type: "timestamptz", nullable: true })
+	@Column({ type: "timestamp", nullable: true })
 	ship!: Date;
 
-	@Column({ type: "timestamptz", nullable: true })
+	@Column({ type: "timestamp", nullable: true })
 	to!: Date;
 }

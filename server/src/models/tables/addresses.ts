@@ -13,11 +13,7 @@ export class Addresses extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@Column({ nullable: true })
-	userId!: number;
-
 	@OneToMany(() => Users, (user) => user.addresses)
-	@JoinColumn({ name: "userId" })
 	users: Users;
 
 	@Column()

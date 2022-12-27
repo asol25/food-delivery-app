@@ -39,12 +39,13 @@ export class UsersRepository extends Repository<Users> {
 	}
 
 	async createUser(createUserDto: CreateUserDto) {
-		const { name, email, phone, addressesId } = createUserDto;
+		const { name, email, phone, addressesId, picture } = createUserDto;
 
 		const user = new Users();
 		user.name = name;
 		user.email = email;
 		user.phone = phone;
+		user.picture = picture;
 		user.addressesId = addressesId;
 
 		try {

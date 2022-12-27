@@ -8,6 +8,10 @@ export const TypeOrmModuleOptions: TypeOrmModuleAsyncOptions = {
 	useFactory: async (configService: ConfigService) => {
 		const NODE_ENV = configService.get("NODE_ENV");
 		const option = {
+			connectionLimit: 1000,
+			connectTimeout: 60 * 60 * 1000,
+			acquireTimeout: 60 * 60 * 1000,
+			timeout: 60 * 60 * 1000,
 			type: configService.get("DB_TYPE"),
 			host: configService.get(`${NODE_ENV}_DB_HOST`),
 			port: Number(configService.get<number>(`${NODE_ENV}_DB_PORT`)),
@@ -19,7 +23,6 @@ export const TypeOrmModuleOptions: TypeOrmModuleAsyncOptions = {
 				path.join(__dirname, "../../models/tables/*.js"),
 			],
 			synchronize: true,
-			socketPath: "/tmp/mysql.sock",
 			...(NODE_ENV === "DEVELOPMENT"
 				? { retryAttempts: 10, logging: true }
 				: { logging: false }),
