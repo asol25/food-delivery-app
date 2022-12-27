@@ -11,5 +11,5 @@ export enum EventRole {
 
 export enum MessagesType {
 	USER = "USER",
-	CHANNEL = "EMPLOYEE",
+	EMPLOYEE = "EMPLOYEE",
 }

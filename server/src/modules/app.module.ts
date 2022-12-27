@@ -7,6 +7,7 @@ import { EventsModule } from "./events.module";
 import { ProductsModule } from "./products.module";
 import { UsersModule } from "./users.module";
 import { AddressesModule } from "./addresses.module";
+import { EmployerModule } from "./employer.module";
 
 @Module({
 	imports: [
@@ -17,6 +18,7 @@ import { AddressesModule } from "./addresses.module";
 		CategoriesModule,
 		UsersModule,
 		AddressesModule,
+		EmployerModule,
 	],
 	controllers: [],
 	providers: [],

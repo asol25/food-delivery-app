@@ -2,17 +2,19 @@ import { IsEmail } from "class-validator";
 import {
 	BaseEntity,
 	Column,
+	CreateDateColumn,
 	Entity,
 	JoinColumn,
 	OneToOne,
 	PrimaryGeneratedColumn,
+	UpdateDateColumn,
 } from "typeorm";
 import { Receiver } from "./message_receiver";
 import { Sender } from "./message_sender";
 
 @Entity()
 export class Employees extends BaseEntity {
-	@PrimaryGeneratedColumn()
+	@PrimaryGeneratedColumn("uuid")
 	id: number;
 
 	@Column()
@@ -22,6 +24,18 @@ export class Employees extends BaseEntity {
 	@IsEmail()
 	email: string;
 
+	@Column({ default: "employer" })
+	role: string;
+
+	@Column()
+	phone: string;
+
+	@Column({ nullable: true })
+	picture!: string;
+
+	@Column({ default: true })
+	status: boolean;
+
 	@OneToOne(() => Receiver)
 	@JoinColumn()
 	receiver: Receiver;
@@ -29,4 +43,10 @@ export class Employees extends BaseEntity {
 	@OneToOne(() => Sender)
 	@JoinColumn()
 	sender: Sender;
+
+	@CreateDateColumn({ name: "created_at" })
+	createdAt: Date;
+
+	@UpdateDateColumn({ name: "updated_at" })
+	updatedAt: Date;
 }

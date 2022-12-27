@@ -12,7 +12,7 @@ import { MessagesType } from "../enums";
 
 @Entity()
 export class Sender extends BaseEntity {
-	@PrimaryGeneratedColumn()
+	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
 	@OneToMany(() => Messages, (msg) => msg.message_sender)
