@@ -45,6 +45,10 @@ export class Users extends BaseEntity {
 	@IsBoolean()
 	status: boolean;
 
+	@Column({ default: false })
+	@IsBoolean()
+	online: boolean;
+
 	@Column({ nullable: true })
 	addressesId!: number;
 

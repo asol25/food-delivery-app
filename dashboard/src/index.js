@@ -1,22 +1,34 @@
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
-
+import { Auth0Provider } from "@auth0/auth0-react";
+import ReactDOM from "react-dom/client";
+import { HelmetProvider } from "react-helmet-async";
+import { BrowserRouter } from "react-router-dom";
 //
-import App from './App';
-import * as serviceWorker from './serviceWorker';
-import reportWebVitals from './reportWebVitals';
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import * as serviceWorker from "./serviceWorker";
 
 // ----------------------------------------------------------------------
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-  <HelmetProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </HelmetProvider>
+	<HelmetProvider>
+		<BrowserRouter>
+			<Auth0Provider
+				domain={`${
+					process.env.REACT_APP_VERCEL_ENV_AUTH0_DOMAIN ||
+					"dev-i3evj9rk.us.auth0.com"
+				}`}
+				clientId={`${
+					process.env.REACT_APP_VERCEL_ENV_CLIENT_ID ||
+					"AGiJsvmFqI2hCZI1CWc7JOEpm4aw8drR"
+				}`}
+				redirectUri={`${window.location.origin}/dashboard/app`}
+			>
+				<App />
+			</Auth0Provider>
+		</BrowserRouter>
+	</HelmetProvider>
 );
 
 // If you want to enable client cache, register instead.

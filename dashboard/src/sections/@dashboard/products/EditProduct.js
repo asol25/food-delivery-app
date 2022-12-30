@@ -51,7 +51,7 @@ const UploadFileComponent = ({ files }) =>
 		return (
 			<p key={fileUrl}>
 				<a href={fileUrl} target="_blank" rel="noreferrer">
-					{fileUrl}
+					{}
 				</a>
 			</p>
 		);

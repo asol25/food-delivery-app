@@ -9,10 +9,19 @@ import { PaginatedResult } from "../dtos/paginated-result.dto";
 import { CreateUserDto } from "./../dtos/create-users.dto";
 import { GetUsersPaginationDto } from "./../dtos/get-users-pagination.dto";
 import { Users } from "./../tables/users";
+import { ReceiverRepository } from "./receiver.repository";
+import { SenderRepository } from "./sender.repository";
+import { MessagesType } from "../enums";
+import { Sender } from "../tables/message_sender";
+import { Receiver } from "../tables/message_receiver";
 
 @Injectable()
 export class UsersRepository extends Repository<Users> {
-	constructor(private dataSource: DataSource) {
+	constructor(
+		private dataSource: DataSource,
+		private receiver: ReceiverRepository,
+		private sender: SenderRepository
+	) {
 		super(Users, dataSource.createEntityManager());
 	}
 
@@ -47,6 +56,12 @@ export class UsersRepository extends Repository<Users> {
 		user.phone = phone;
 		user.picture = picture;
 		user.addressesId = addressesId;
+		user.sender = (await this.sender.createEntity(
+			MessagesType.EMPLOYEE
+		)) as unknown as Sender;
+		user.receiver = (await this.receiver.createEntity(
+			MessagesType.EMPLOYEE
+		)) as unknown as Receiver;
 
 		try {
 			await user.save();

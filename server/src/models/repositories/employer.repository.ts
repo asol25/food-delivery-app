@@ -1,3 +1,4 @@
+import { GetUserByEmailDto } from "src/models/dtos/get-user-by-email.dto";
 import {
 	Injectable,
 	InternalServerErrorException,
@@ -36,6 +37,8 @@ export class EmployerRepository extends Repository<Employees> {
 		const query = this.createQueryBuilder("user");
 
 		const totalCount = await query.getCount();
+		query.leftJoinAndSelect("user.sender", "sender");
+		query.leftJoinAndSelect("user.receiver", "receiver");
 		query.offset((page - 1) * limit);
 		query.limit(limit);
 
@@ -59,9 +62,7 @@ export class EmployerRepository extends Repository<Employees> {
 		user.email = email;
 		user.phone = phone;
 		user.picture = picture;
-		user.sender = (await this.sender.createEntity(
-			MessagesType.EMPLOYEE
-		)) as unknown as Sender;
+		user.sender = (await this.sender.createEntity(MessagesType.EMPLOYEE)) as unknown as Sender;
 		user.receiver = (await this.receiver.createEntity(
 			MessagesType.EMPLOYEE
 		)) as unknown as Receiver;
@@ -94,6 +95,20 @@ export class EmployerRepository extends Repository<Employees> {
 			throw new InternalServerErrorException();
 		}
 
+		return user;
+	}
+
+	async getUserByEmail(getUserByEmailDto: GetUserByEmailDto) {
+		const { email } = getUserByEmailDto;
+		const user = await this.findOne({
+			relations: {
+				sender: true,
+				receiver: true,
+			},
+			where: {
+				email: email,
+			},
+		});
 		return user;
 	}
 }

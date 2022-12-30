@@ -17,6 +17,11 @@ export class UsersController {
 		return this.usersService.getUsersWithPagination(getUsersPaginationDto);
 	}
 
+	@Get("getUserDetail/:email")
+	getUserDetail(@Param() param) {
+		return this.usersService.getUserDetail(param);
+	}
+
 	@Post("create/user")
 	createUser(@Body() createUserDto: CreateUserDto) {
 		return this.usersService.createUser(createUserDto);

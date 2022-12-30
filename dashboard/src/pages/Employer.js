@@ -76,7 +76,7 @@ function applySortFilter(array, comparator, query) {
 	return stabilizedThis.map((el) => el[0]);
 }
 
-export default function UserPage() {
+export default function EmployerPage() {
 	const [users, setUsers] = useState([]);
 	const [banned, setBanned] = useState(null);
 	const [openCreateUser, setOpenCreateUser] = useState(false);
@@ -167,7 +167,7 @@ export default function UserPage() {
 		let isChecked = true;
 		if (isChecked) {
 			const fetchDataUsers = async () => {
-				const response = await apisUsers.getUsersWithPagination(1, 30);
+				const response = await apisUsers.getEmployerWithPagination(1, 30);
 				const { data, status } = response;
 				if (status === 200 && data.data.length > 0) {
 					setUsers(data.data);
@@ -182,7 +182,7 @@ export default function UserPage() {
 	}, []);
 
 	const handleRequestChangeStatus = async () => {
-		const response = await apisUsers.bannedUserByUserId(
+		const response = await apisUsers.bannedEmployerByEmployerId(
 			banned.userId,
 			!banned.status
 		);
@@ -206,7 +206,7 @@ export default function UserPage() {
 	return (
 		<>
 			<Helmet>
-				<title> User | Minimal UI </title>
+				<title> Employer | Minimal UI </title>
 			</Helmet>
 
 			<Container>
@@ -217,7 +217,7 @@ export default function UserPage() {
 					mb={5}
 				>
 					<Typography variant="h4" gutterBottom>
-						User
+						Employe
 					</Typography>
 					<Button
 						onClick={() => setOpenCreateUser(!openCreateUser)}

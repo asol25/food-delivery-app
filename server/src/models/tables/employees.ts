@@ -1,4 +1,4 @@
-import { IsEmail } from "class-validator";
+import { IsBoolean, IsEmail } from "class-validator";
 import {
 	BaseEntity,
 	Column,
@@ -35,6 +35,10 @@ export class Employees extends BaseEntity {
 
 	@Column({ default: true })
 	status: boolean;
+
+	@Column({ default: false })
+	@IsBoolean()
+	online: boolean;
 
 	@OneToOne(() => Receiver)
 	@JoinColumn()

@@ -12,7 +12,7 @@ import { Sender } from "./message_sender";
 
 @Entity()
 export class Messages extends BaseEntity {
-	@PrimaryGeneratedColumn()
+	@PrimaryGeneratedColumn("uuid")
 	id: number;
 
 	@Column()
