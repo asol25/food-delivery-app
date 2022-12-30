@@ -16,6 +16,27 @@ export class UsersService {
 		this.logger = new Logger(UsersService.name);
 	}
 
+	async getUserDetail(param): Promise<Users> {
+		const { email } = param;
+		try {
+			const userResponseObject = await this.usersRepository.findOne({
+				relations: {
+					sender: true,
+					receiver: true,
+				},
+				where: {
+					email: email,
+				},
+			});
+			if (this.usersRepository.hasId(userResponseObject) === false)
+				throw new NotFoundException();
+
+			return userResponseObject;
+		} catch (error) {
+			this.logger.error(error);
+			throw error;
+		}
+	}
 	async getUsersWithPagination(getUsersPaginationDto: GetUsersPaginationDto) {
 		try {
 			const users = await this.usersRepository.getUsersWithPagination(
@@ -35,6 +56,19 @@ export class UsersService {
 
 	async createUser(createUserDto: CreateUserDto): Promise<Users> {
 		try {
+			const isCheckUserExist = await this.usersRepository.findOne({
+				relations: {
+					sender: true,
+					receiver: true,
+				},
+				where: {
+					email: createUserDto.email,
+				},
+			});
+
+			if (this.usersRepository.hasId(isCheckUserExist) === true)
+				return isCheckUserExist;
+
 			const user = await this.usersRepository.createUser(createUserDto);
 			return user;
 		} catch (error) {

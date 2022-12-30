@@ -1,10 +1,10 @@
-import { Employees } from "./../models/tables/employees";
-import { EmployerRepository } from "./../models/repositories/employer.repository";
-import { GetUsersPaginationDto } from "./../models/dtos/get-users-pagination.dto";
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
-import { CreateUserDto } from "src/models/dtos/create-users.dto";
-import { UpdateStatusUsersDto } from "src/models/dtos/update-users-status.dto";
-import { Users } from "src/models/tables/users";
+import { CreateUserDto } from "./../models/dtos/create-users.dto";
+import { GetUserByEmailDto } from "./../models/dtos/get-user-by-email.dto";
+import { UpdateStatusUsersDto } from "./../models/dtos/update-users-status.dto";
+import { GetUsersPaginationDto } from "./../models/dtos/get-users-pagination.dto";
+import { EmployerRepository } from "./../models/repositories/employer.repository";
+import { Employees } from "./../models/tables/employees";
 
 @Injectable()
 export class EmployerService {
@@ -12,6 +12,24 @@ export class EmployerService {
 	constructor(private employerRepository: EmployerRepository) {
 		this.logger = new Logger(EmployerService.name);
 	}
+
+	async getUserDetail(
+		getUserByEmailDto: GetUserByEmailDto
+	): Promise<Employees> {
+		try {
+			const userResponseObject = await this.employerRepository.getUserByEmail(
+				getUserByEmailDto
+			);
+			if (this.employerRepository.hasId(userResponseObject) === false)
+				throw new NotFoundException();
+
+			return userResponseObject;
+		} catch (error) {
+			this.logger.error(error);
+			throw error;
+		}
+	}
+
 	async getEmployerWithPagination(
 		getEmployerWithPagination: GetUsersPaginationDto
 	) {
@@ -33,6 +51,19 @@ export class EmployerService {
 
 	async createEmployer(createEmployerDto: CreateUserDto): Promise<Employees> {
 		try {
+			const isCheckUserExist = await this.employerRepository.findOne({
+				relations: {
+					sender: true,
+					receiver: true,
+				},
+				where: {
+					email: createEmployerDto.email,
+				},
+			});
+
+			if (this.employerRepository.hasId(isCheckUserExist) === true)
+				return isCheckUserExist;
+
 			const Employer = await this.employerRepository.createEmployer(
 				createEmployerDto
 			);
