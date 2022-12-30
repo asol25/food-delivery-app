@@ -9,13 +9,12 @@ export class CreateUserDto {
 	@IsEmail()
 	readonly email: string;
 
-	@ApiProperty()
-	readonly phone: string;
+	@ApiProperty({ nullable: true })
+	readonly phone!: string;
 
 	@ApiProperty({ nullable: true })
 	readonly picture: string;
 
-	@ApiProperty()
-	@IsNotEmpty()
+	@ApiProperty({ nullable: true })
 	readonly addressesId!: number;
 }
