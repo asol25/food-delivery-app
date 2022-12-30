@@ -1,4 +1,4 @@
-import { MessageDto } from "./../models/dtos/create-msesage.dto";
+import { MessageDto } from "../models/dtos/create-msesage.dto";
 import {
 	MessageBody,
 	OnGatewayConnection,
@@ -8,7 +8,7 @@ import {
 	WebSocketServer,
 } from "@nestjs/websockets";
 import { Server } from "socket.io";
-import { MessengerRepository } from "./../models/repositories/messenger.repository";
+import { MessengerRepository } from "../models/repositories/messenger.repository";
 import { GetMessageDto } from "../models/dtos/get-messages.dto";
 
 @WebSocketGateway({
