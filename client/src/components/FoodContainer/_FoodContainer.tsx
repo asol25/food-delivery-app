@@ -60,7 +60,7 @@ const FoodContainer: React.FunctionComponent<IFoodContainerProps> = (props) => {
 					{products.length > 0 ? (
 						products.map((product: IProducts) => (
 							<SwiperSlide key={product.id}>
-								<FoodProducts product={product} />
+								{product && <FoodProducts product={product} key={product.id} />}
 							</SwiperSlide>
 						))
 					) : (

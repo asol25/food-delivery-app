@@ -5,7 +5,7 @@ import { CreateAddressesDto } from "../models/dtos/create-addresses.dto";
 import { GetAddressesFilterUser } from "./../models/dtos/get-addresses-filter-user.dto";
 import { AddressesService } from "./../providers/addresses.service";
 
-@ApiTags("Addresses")
+@ApiTags("addresses")
 @Controller("addresses")
 export class AddressesController {
 	constructor(private addressesService: AddressesService) {}

@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+import axios from "axios";
 import * as React from "react";
 import { IProducts } from "../../services/types/products";
 
@@ -7,10 +9,37 @@ interface IFoodProductsProps {
 
 const FoodProducts: React.FunctionComponent<IFoodProductsProps> = (props) => {
 	const { product } = props;
-	const [isStyleLove, setIsStyleLove] = React.useState<boolean>(false);
+	const { category } = product;
+	const [isStyleLove, setIsStyleLove] = React.useState<boolean | undefined>(
+		product.like
+	);
 
-	const handleToggleStyleLove = () => {
+	const handleStyleLove = (productID: number) => {
+		const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+		const favoriteData = {
+			product: productID,
+			user: currentUser.user.id,
+		};
+
+		if (isStyleLove) {
+			return axios.put(
+				`${
+					process.env.REACT_APP_VERCEL_ENV_API_DOMAIN ||
+					"http://localhost:33714"
+				}/favorite-products/update/product`,
+				favoriteData
+			);
+		}
+		return axios.post(
+			`${
+				process.env.REACT_APP_VERCEL_ENV_API_DOMAIN || "http://localhost:33714"
+			}/favorite-products/create/product`,
+			favoriteData
+		);
+	};
+	const handleToggleStyleLove = (productID: number) => {
 		setIsStyleLove(!isStyleLove);
+		handleStyleLove(productID);
 	};
 	return (
 		<>
@@ -22,15 +51,17 @@ const FoodProducts: React.FunctionComponent<IFoodProductsProps> = (props) => {
 					{product.title}
 				</h3>
 				<p className="text-[12px] lg:text-sm text-light textGray font-semibold my-1 lg:my-3">
-					{product.category}
+					{category && category.name}
 				</p>
 				<div className="flex items-center gap-2">
 					<div
 						className="rounded-full w-8 h-8 flex justify-center items-center"
-						onClick={handleToggleStyleLove}
+						onClick={() => handleToggleStyleLove(product.id)}
 					>
 						<i
-							className={`ri-heart-fill  text-red-500 fill-red-600 ${isStyleLove && "love-filter"}`}
+							className={`ri-heart-fill  text-red-500 fill-red-600 ${
+								isStyleLove && "love-filter"
+							}`}
 						/>
 					</div>
 					<p className="text-sm font-semibold text-headingColor">

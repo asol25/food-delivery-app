@@ -1,6 +1,10 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-return-assign */
+import axios from "axios";
 import * as React from "react";
 import * as apis from "../apis/index";
 import { ProductsType } from "../types";
+import { IProducts } from "../types/products";
 
 export const ProductsHook = () => {
 	const [products, setProducts] = React.useState<ProductsType.IProducts[]>([]);
@@ -18,12 +22,64 @@ export const ProductsHook = () => {
 		setStartProducts(_limit);
 	};
 
+	const filterFavoriteProducts = (a: any, b: any) => {
+		console.log(
+			"🚀 ~ file: productsHook.tsx:27 ~ filterFavoriteProducts ~ a: any, b: any",
+			a,
+			b
+		);
+		const isSameUser = (a: any, b: any) => a.id === b.id;
+		const filterArray = (
+			left: any,
+			right: any,
+			compareFunction: (a: any, b: any) => boolean
+		) =>
+			left.filter((leftValue: any) => {
+				const value = right.some((rightValue: any) =>
+					compareFunction(leftValue, rightValue.product)
+				);
+				const source = {
+					like: false,
+				};
+				Object.assign(leftValue, source);
+				if (value === true) {
+					return (leftValue.like = true);
+				}
+				return leftValue;
+			});
+
+		return filterArray(a, b, isSameUser);
+	};
+	const getFavoriteProducts = async () => {
+		try {
+			const currentUser = JSON.parse(
+				localStorage.getItem("currentUser") || "{}"
+			);
+
+			if (currentUser !== null && currentUser !== undefined) {
+				const productsFavoriteOfClient = await axios(
+					`${
+						process.env.REACT_APP_SERVER_URL || "http://localhost:33714"
+					}/favorite-products/get/product/${currentUser.user.id}`
+				);
+
+				const { data, status } = productsFavoriteOfClient;
+				if (status === 200 && data.length > 0) {
+					return data;
+				}
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
 	React.useEffect(() => {
 		let isChecked = true;
 
 		if (isChecked) {
 			const fetchProducts = async () => {
 				try {
+					const productsClientLike = await getFavoriteProducts();
 					const products = apis.products.getProducts(
 						startProducts,
 						limitProducts
@@ -39,9 +95,26 @@ export const ProductsHook = () => {
 					if (statusProducts !== 200 || statusProductsFavorite !== 200) {
 						throw Error("Something went wrong");
 					}
+					const dataProductsResponse: IProducts[] = await (
+						await products
+					).data.data;
+					const productsFavoriteResponse: IProducts[] = await (
+						await productsFavorite
+					).data;
 
-					setProducts((await products).data.data);
-					setProductsFavorite((await productsFavorite).data);
+					if (productsClientLike !== undefined) {
+						setProducts(
+							filterFavoriteProducts(dataProductsResponse, productsClientLike)
+						);
+						setProductsFavorite(
+							filterFavoriteProducts(
+								productsFavoriteResponse,
+								productsClientLike
+							)
+						);
+					}
+					setProducts(dataProductsResponse);
+					setProductsFavorite(productsFavoriteResponse);
 				} catch (error) {
 					console.log(
 						"🚀 ~ file: productsHook.tsx ~ fetchProducts ~ error",
@@ -60,6 +133,7 @@ export const ProductsHook = () => {
 	return {
 		products,
 		productsFavorite,
+		setProducts,
 		handleGetProductsByLimit,
 		handleGetProductsByStart,
 	};

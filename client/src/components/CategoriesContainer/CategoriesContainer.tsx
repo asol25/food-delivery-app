@@ -2,17 +2,64 @@ import * as React from "react";
 import FoodIcon from "../../img/favorite_food_icon.png";
 import { IProducts } from "../../services/types/products";
 import FoodProducts from "../FoodContainer/_FoodProducts";
-import CategoriesMenuMobile from "./CategoriesMenuMobile";
+import ProductFilterSideBar from "./ProductFilterSidebar";
 
 interface ICategoriesContainerProps {
 	products: IProducts[];
 }
 
+export type filterStateProducts = {
+	categoryID: number;
+	cost: number;
+	rating: number;
+};
 const CategoriesContainer: React.FunctionComponent<
 	ICategoriesContainerProps
 > = (props) => {
 	const { products } = props;
+	const [filterStateProducts, setFilterStateProducts] =
+		React.useState<filterStateProducts>({
+			categoryID: 0,
+			cost: 0,
+			rating: 0,
+		});
 
+	const handleCleanFilterState = () => {
+		setFilterStateProducts({
+			categoryID: 0,
+			cost: 0,
+			rating: 0,
+		});
+	};
+	const applyFilter = (
+		state: typeof filterStateProducts,
+		products: IProducts[]
+	): IProducts[] => {
+		let newProducts = [...products];
+
+		if (state.categoryID !== 0) {
+			newProducts = newProducts.filter(
+				(product: IProducts) => product.categoryId === state.categoryID
+			);
+		}
+
+		if (state.cost !== 0) {
+			newProducts = newProducts.filter(
+				(product: IProducts) => product.cost <= state.cost
+			);
+		}
+
+		if (state.rating !== 0) {
+			newProducts = newProducts.filter(
+				(product: IProducts) => product.rating <= state.rating
+			);
+		}
+
+		return newProducts;
+	};
+	const filterProducts = products
+		? applyFilter(filterStateProducts, products)
+		: ([] as IProducts[]);
 	return (
 		<>
 			<div className="section" id="menu">
@@ -26,25 +73,16 @@ const CategoriesContainer: React.FunctionComponent<
 						alt="_food_icon"
 					/>
 				</div>
-				{/* 
-				<div className="md:flex md:flex-row items-center justify-around hidden">
-					<CategoriesMenu />
-					<CategoriesMenu />
-					<CategoriesMenu />
-					<CategoriesMenu />
-					<CategoriesMenu />
-					<CategoriesMenu />
-					<CategoriesMenu />
-					<CategoriesMenu />
-				</div> */}
-
-				<div className="md:hidden block">
-					<CategoriesMenuMobile />
+				<div className="flex justify-end">
+					<ProductFilterSideBar
+						onFilter={setFilterStateProducts}
+						cleanFilter={handleCleanFilterState}
+					/>
 				</div>
 
 				<div className="grid grid-cols-2 lg:grid-cols-4 items-center gap-8 my-8">
-					{products &&
-						products.map((product: IProducts) => (
+					{filterProducts &&
+						filterProducts.map((product: IProducts) => (
 							<FoodProducts product={product} key={product.id} />
 						))}
 				</div>

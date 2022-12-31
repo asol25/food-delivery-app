@@ -17,10 +17,6 @@ export class Orders extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@Column()
-	@IsInt()
-	cost: number;
-
 	@Column({ default: false })
 	isCheckedPayment: boolean;
 

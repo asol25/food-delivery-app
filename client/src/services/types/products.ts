@@ -1,10 +1,24 @@
+export interface ICategory {
+	id: number;
+	name: string;
+	thumbnail: string;
+	createdAt: Date;
+	updatedAt: Date;
+}
+
 export interface IProducts {
 	id: number;
 	title: string;
 	desc: string;
-	category: string;
+	status?: any;
+	thumbnail: string;
 	rating: number;
 	cost: number;
-	sale?: number;
-	thumbnail: string;
+	sale: number;
+	views: number;
+	like?: boolean;
+	categoryId: number;
+	createdAt: Date;
+	updatedAt: Date;
+	category?: ICategory;
 }

@@ -14,7 +14,7 @@ export const getProductsByViews = async () => {
 	const products = await axios.get(
 		`${
 			process.env.REACT_APP_VERCEL_ENV_API_DOMAIN || "http://localhost:33714"
-		}/products/order/views/`
+		}/products/order/views`
 	);
 
 	return products;
