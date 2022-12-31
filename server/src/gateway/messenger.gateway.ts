@@ -1,4 +1,4 @@
-import { MessageDto } from "../models/dtos/create-msesage.dto";
+import { MessageDto } from "./../models/dtos/create-msesage.dto";
 import {
 	MessageBody,
 	OnGatewayConnection,
@@ -8,7 +8,7 @@ import {
 	WebSocketServer,
 } from "@nestjs/websockets";
 import { Server } from "socket.io";
-import { MessengerRepository } from "../models/repositories/messenger.repository";
+import { MessengerRepository } from "./../models/repositories/messenger.repository";
 import { GetMessageDto } from "../models/dtos/get-messages.dto";
 
 @WebSocketGateway({
@@ -31,7 +31,6 @@ export class MessengerGateway
 			this.allClients.push({
 				socket: client.id,
 				client: username,
-				self: false,
 			});
 
 			this.server.sockets.emit("clients", {
@@ -60,19 +59,19 @@ export class MessengerGateway
 		}
 	}
 
+	@SubscribeMessage("clients")
+	async handleEventGetClients() {
+		return { clients: this.allClients };
+	}
+
 	@SubscribeMessage("get_messages")
 	async handleEventGetMessagesBySenderAndReceiver(
 		@MessageBody() getMessageDto: GetMessageDto
 	) {
-		console.log("🚀 ~ file: messenger.gatewa.ts:66 ~ data", getMessageDto);
 		const messageRepositoryObject =
 			await this.messengerRepository.getMessagesBySenderAndReceiver(
 				getMessageDto
 			);
-		console.log(
-			"🚀 ~ file: messenger.gateway.ts:68 ~ messageRepositoryObject",
-			messageRepositoryObject
-		);
 		if (messageRepositoryObject.length > 0) {
 			this.server.sockets
 				.to(getMessageDto.to)
@@ -84,10 +83,6 @@ export class MessengerGateway
 	async handleEventBetweenToAEmployer(@MessageBody() messageDto: MessageDto) {
 		const messageRepositoryArray = await this.messengerRepository.createMessage(
 			messageDto
-		);
-		console.log(
-			"🚀 ~ file: messenger.gatewa.ts:88 ~ handleEventBetweenToAEmployer ~ messageRepositoryArray",
-			messageRepositoryArray
 		);
 		if (this.messengerRepository.hasId(messageRepositoryArray)) {
 			this.server.sockets

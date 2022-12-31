@@ -25,7 +25,17 @@ export class MessengerRepository extends Repository<Messages> {
 			throw new InternalServerErrorException();
 		}
 
-		return messages;
+		if (this.hasId(messages)) {
+			const query = this.createQueryBuilder("message");
+			query.leftJoinAndSelect("message.message_sender", "sender");
+			query.leftJoinAndSelect("message.message_recipients", "receiver");
+			query.where("(message.id = :key)", {
+				key: messages.id,
+			});
+			query.getOne();
+			const msg = await query.getOne();
+			return msg;
+		}
 	}
 
 	async getMessagesBySenderAndReceiver(

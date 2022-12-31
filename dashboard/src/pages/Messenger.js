@@ -1,22 +1,66 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-return-assign */
 /* eslint-disable array-callback-return */
 /* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useAuth0 } from "@auth0/auth0-react";
-import { Container, Button } from "@mui/material";
+import {
+	Button,
+	Container,
+	Grid,
+	Stack,
+	Typography,
+	Alert,
+} from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
-import TextField from "@mui/material/TextField";
+import Avatar from "@mui/material/Avatar";
+import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
+import Paper from "@mui/material/Paper";
+import { styled } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
 import axios from "axios";
+import { isArray } from "lodash";
 import React from "react";
 import { Helmet } from "react-helmet-async";
 import "../chat.css";
-import { isArray } from "lodash";
 
-const Alert = React.forwardRef((props, ref) => (
-	<MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
-));
+const StyledBadge = styled(Badge)(({ theme }) => ({
+	"& .MuiBadge-badge": {
+		backgroundColor: "#44b700",
+		color: "#44b700",
+		boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+		"&::after": {
+			position: "absolute",
+			top: 0,
+			left: 0,
+			width: "100%",
+			height: "100%",
+			borderRadius: "50%",
+			animation: "ripple 1.2s infinite ease-in-out",
+			border: "1px solid currentColor",
+			content: '""',
+		},
+	},
+	"@keyframes ripple": {
+		"0%": {
+			transform: "scale(.8)",
+			opacity: 1,
+		},
+		"100%": {
+			transform: "scale(2.4)",
+			opacity: 0,
+		},
+	},
+}));
+
+const Item = styled(Paper)(({ theme }) => ({
+	backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+	...theme.typography.body2,
+	padding: theme.spacing(1),
+	textAlign: "center",
+	color: theme.palette.text.secondary,
+}));
 
 const filterClients = (allClients, onlineClients) => {
 	const isSameUser = (a, b) => a.email === b.email;
@@ -29,6 +73,7 @@ const filterClients = (allClients, onlineClients) => {
 				Object.assign(leftValue, source);
 				return compareFunction(leftValue, rightValue.client);
 			});
+			leftValue.online = false;
 			if (value === true) {
 				return (leftValue.online = true);
 			}
@@ -39,19 +84,32 @@ const filterClients = (allClients, onlineClients) => {
 	return (filterClients = filterClients.sort((a, b) => {
 		if (a.online) return -1;
 		if (b.online) return 1;
-		if (a.name < b.name) return -1;
-		return a.name > b.name ? 1 : 0;
+		if (a.email < b.email) return -1;
+		return a.email > b.email ? 1 : 0;
 	}));
 };
 export default function MessengerPage({ socket }) {
-	const { user } = useAuth0();
 	const [allClients, setAllClients] = React.useState([]);
 	const [listMsg, setListMsg] = React.useState([]);
 	const [msg, setMsg] = React.useState("");
-	const [receiver, setReceiver] = React.useState("");
-	const [sender, setSender] = React.useState("");
 	const [isLoading, setIsLoading] = React.useState(true);
 	const [selectedClient, setSelectedClient] = React.useState(null);
+	const [senderSelf, setSenderSelf] = React.useState(null);
+	const messagesEndRef = React.useRef(null);
+
+	const scrollToBottom = () => {
+		messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+	};
+
+	React.useEffect(() => {
+		if (isLoading === true && allClients.length > 0) {
+			socket.emit("clients", ({ clients }) => {
+				setAllClients(filterClients(allClients, clients));
+				setIsLoading(false);
+			});
+		}
+	}, [window.location.pathname, allClients]);
+	React.useEffect(scrollToBottom, [listMsg]);
 	/**
 	 * Send message with email sender && email receiver
 	 * @param {object} sender
@@ -96,9 +154,10 @@ export default function MessengerPage({ socket }) {
 	 * @param {object} client
 	 */
 	const handleSelectClient = (client) => {
-		setListMsg([]);
 		setSelectedClient(client);
+		setListMsg([]);
 		const senderSelf = JSON.parse(localStorage.getItem("verified")).sender.id;
+		setSenderSelf(senderSelf);
 		const receiverOther = client.receiver.id;
 		const senderOther = client.sender.id;
 		const receiverSelf = JSON.parse(localStorage.getItem("verified")).receiver
@@ -114,26 +173,27 @@ export default function MessengerPage({ socket }) {
 
 	React.useEffect(() => {
 		let isChecked = true;
-		if (isChecked) {
-			socket.on("connect", () => {
-				console.log(`⚡: ${socket.id} user just connected!`);
-				socket.on("clients", ({ clients }) => {
-					setAllClients(filterClients(allClients, clients));
-					setIsLoading(false);
-				});
 
-				socket.on("receive_messages", (messageRepositoryObject) => {
-					if (isArray(messageRepositoryObject)) {
-						setListMsg(messageRepositoryObject);
-					}
+		if (isChecked && allClients.length > 0) {
+			socket.on("clients", ({ clients }) => {
+				setAllClients(filterClients(allClients, clients));
+				setIsLoading(false);
+			});
+			socket.on("receive_messages", (messageRepositoryObject) => {
+				console.log(messageRepositoryObject);
+				if (isArray(messageRepositoryObject)) {
+					setListMsg(messageRepositoryObject);
+				} else {
 					setListMsg((preState) => [...preState, messageRepositoryObject]);
-				});
+				}
 			});
 		}
 		return () => {
 			isChecked = false;
+			socket.off("receive_messages");
 			socket.off("connect");
 			socket.off("disconnect");
+			socket.off("pong");
 		};
 	}, [socket, allClients]);
 
@@ -166,55 +226,146 @@ export default function MessengerPage({ socket }) {
 				<title> Messenger | Minimal UI </title>
 			</Helmet>
 
-			<Container>
-				{allClients.length > 0 && isLoading === false ? (
-					allClients.map((client) => (
-						<>
-							<Alert
-								severity="success"
-								sx={{ width: "100%" }}
-								key={client.id}
-								onClick={() => handleSelectClient(client)}
+			<Container position="relative">
+				<Grid container spacing={2}>
+					<Grid item xs={12} md={4}>
+						<Item>
+							<Stack gap={2}>
+								{allClients.length > 0 && isLoading === false ? (
+									allClients.map((client) => {
+										if (client.online) {
+											return (
+												<Box
+													key={client.id}
+													display="flex"
+													flexDirection={"row"}
+													alignItems="center"
+													justifyContent={"flex-start"}
+													columnGap={2}
+													onClick={() => handleSelectClient(client)}
+												>
+													<StyledBadge
+														overlap="circular"
+														anchorOrigin={{
+															vertical: "bottom",
+															horizontal: "right",
+														}}
+														variant="dot"
+													>
+														<Avatar alt="Remy Sharp" src={client.picture} />
+													</StyledBadge>
+													<Typography>{client.name}</Typography>
+												</Box>
+											);
+										}
+
+										return (
+											<Box
+												key={client.id}
+												display="flex"
+												flexDirection={"row"}
+												alignItems="center"
+												justifyContent={"flex-start"}
+												columnGap={2}
+												onClick={() => handleSelectClient(client)}
+											>
+												<Avatar alt="Remy Sharp" src={client.picture} />
+												<Typography>{client.name}</Typography>
+											</Box>
+										);
+									})
+								) : (
+									<Box sx={{ width: "100%" }}>
+										<LinearProgress />
+									</Box>
+								)}
+							</Stack>
+						</Item>
+					</Grid>
+					<Grid item xs={12} md={8}>
+						<Item>
+							<Box
+								height={"500px"}
+								display="flex"
+								flexDirection="column"
+								justifyContent="space-between"
 							>
-								{client.email}
-							</Alert>
-							<span>{`${client.online}`}</span>
-						</>
-					))
-				) : (
-					<Box sx={{ width: "100%" }}>
-						<LinearProgress />
-					</Box>
-				)}
+								<Box height={"450px"} maxHeight="450px" className="clearfix">
+									{listMsg.length > 0 &&
+										listMsg.map((msg, index) => {
+											if (String(msg.message_sender.id).includes(senderSelf)) {
+												return (
+													<Box
+														key={index}
+														display="flex"
+														justifyContent={"flex-end"}
+														alignItems="center"
+														gap={2}
+														marginY={2}
+														marginRight={2}
+													>
+														<Alert icon={false}>{msg.message}</Alert>
+														<Avatar
+															alt="Remy Sharp"
+															src="/static/images/avatar/1.jpg"
+															sizes="small"
+														/>
+													</Box>
+												);
+											}
 
-				{listMsg.length > 0 &&
-					listMsg.map((msg) => (
-						<Alert key={msg.id} severity="info">
-							{msg.message}
-						</Alert>
-					))}
+											return (
+												<Box
+													key={index}
+													display="flex"
+													justifyContent={"flex-start"}
+													alignItems="center"
+													gap={2}
+													marginY={2}
+												>
+													<Avatar
+														alt="Remy Sharp"
+														src="/static/images/avatar/1.jpg"
+														sizes="small"
+													/>
+													<Alert icon={false}>{msg.message}</Alert>
+												</Box>
+											);
+										})}
+									<div ref={messagesEndRef} />
+								</Box>
 
-				<div>
-					<TextField
-						fullWidth
-						id="standard-multiline-static"
-						label="Message"
-						multiline
-						rows={2}
-						value={msg}
-						variant="standard"
-						onChange={(e) => setMsg(e.target.value)}
-					/>
-					<br />
-					<br />
-					<Button
-						onClick={() => {
-							handleEventSendMessageBetweenToAEmployer(selectedClient);
-						}}
-					>
-						@Click
-					</Button>
-				</div>
+								<div>
+									{selectedClient && (
+										<>
+											<TextField
+												fullWidth
+												id="standard-multiline-static"
+												label="Message"
+												multiline
+												rows={2}
+												value={msg}
+												variant="standard"
+												onChange={(e) => setMsg(e.target.value)}
+											/>
+											<br />
+											<br />
+											<Button
+												onClick={() => {
+													handleEventSendMessageBetweenToAEmployer(
+														selectedClient
+													);
+												}}
+											>
+												@Click
+											</Button>
+										</>
+									)}
+								</div>
+							</Box>
+						</Item>
+					</Grid>
+				</Grid>
 			</Container>
 		</>
 	);
