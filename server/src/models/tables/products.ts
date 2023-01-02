@@ -16,7 +16,7 @@ import { Categories } from "./categories";
 import { Comments } from "./comments";
 import { Favorites } from "./favorites";
 import { NotificationsDetail } from "./notificationsDetail";
-import { OrdersDetail } from "./ordersDetail";
+import { Orders } from "./orders";
 import { SchedulesDetail } from "./schedulesDetail";
 
 export class ColumnNumericTransformer {
@@ -84,8 +84,8 @@ export class Products extends BaseEntity {
 	@OneToMany(() => Favorites, (favorite) => favorite.product)
 	favorites: Favorites[];
 
-	@OneToMany(() => OrdersDetail, (orderDetail) => orderDetail.product)
-	ordersDetail!: OrdersDetail[];
+	@OneToMany(() => Orders, (orders) => orders.product)
+	orders!: Orders[];
 
 	@OneToMany(
 		() => NotificationsDetail,

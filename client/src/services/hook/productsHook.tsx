@@ -23,11 +23,6 @@ export const ProductsHook = () => {
 	};
 
 	const filterFavoriteProducts = (a: any, b: any) => {
-		console.log(
-			"🚀 ~ file: productsHook.tsx:27 ~ filterFavoriteProducts ~ a: any, b: any",
-			a,
-			b
-		);
 		const isSameUser = (a: any, b: any) => a.id === b.id;
 		const filterArray = (
 			left: any,

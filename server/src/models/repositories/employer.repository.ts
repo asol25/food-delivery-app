@@ -62,7 +62,9 @@ export class EmployerRepository extends Repository<Employees> {
 		user.email = email;
 		user.phone = phone;
 		user.picture = picture;
-		user.sender = (await this.sender.createEntity(MessagesType.EMPLOYEE)) as unknown as Sender;
+		user.sender = (await this.sender.createEntity(
+			MessagesType.EMPLOYEE
+		)) as unknown as Sender;
 		user.receiver = (await this.receiver.createEntity(
 			MessagesType.EMPLOYEE
 		)) as unknown as Receiver;

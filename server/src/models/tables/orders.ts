@@ -1,15 +1,14 @@
-import { IsInt } from "class-validator";
 import {
 	BaseEntity,
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinColumn,
 	ManyToOne,
-	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
-import { OrdersDetail } from "./ordersDetail";
+import { Products } from "./products";
 import { Users } from "./users";
 
 @Entity()
@@ -17,20 +16,22 @@ export class Orders extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@Column({ default: false })
-	isCheckedPayment: boolean;
+	@Column({ nullable: true })
+	userId!: number;
 
-	@Column({ default: false })
-	isCheckedShipping: boolean;
+	@Column({ nullable: true })
+	productId!: number;
+
+	@Column({ default: 1 })
+	quantity: number;
 
 	@ManyToOne(() => Users, (user) => user.orders)
-	user: Users;
+	@JoinColumn({ name: "userId" })
+	user!: Users;
 
-	@Column()
-	userId: number;
-
-	@OneToMany(() => OrdersDetail, (orderDetail) => orderDetail.order)
-	orderDetails: OrdersDetail[];
+	@ManyToOne(() => Products, (products) => products.orders)
+	@JoinColumn({ name: "productId" })
+	product!: Products;
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;

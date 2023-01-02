@@ -14,6 +14,7 @@ import { SenderRepository } from "./sender.repository";
 import { MessagesType } from "../enums";
 import { Sender } from "../tables/message_sender";
 import { Receiver } from "../tables/message_receiver";
+import { Orders } from "../tables/orders";
 
 @Injectable()
 export class UsersRepository extends Repository<Users> {
@@ -51,6 +52,7 @@ export class UsersRepository extends Repository<Users> {
 		const { name, email, phone, addressesId, picture } = createUserDto;
 
 		const user = new Users();
+		const order = new Orders();
 		user.name = name;
 		user.email = email;
 		user.phone = phone;
@@ -62,9 +64,10 @@ export class UsersRepository extends Repository<Users> {
 		user.receiver = (await this.receiver.createEntity(
 			MessagesType.EMPLOYEE
 		)) as unknown as Receiver;
-
 		try {
 			await user.save();
+			order.userId = user.id;
+			await order.save();
 		} catch (error) {
 			throw new InternalServerErrorException();
 		}

@@ -24,7 +24,7 @@ export const TypeOrmModuleOptions: TypeOrmModuleAsyncOptions = {
 			],
 			synchronize: true,
 			...(NODE_ENV === "DEVELOPMENT"
-				? { retryAttempts: 10, logging: true }
+				? { retryAttempts: 10, logging: false }
 				: { logging: false }),
 		};
 

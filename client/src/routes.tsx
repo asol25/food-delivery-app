@@ -26,6 +26,7 @@ export default function Routes(): ReturnType<typeof useRoutes> {
 					send
 				);
 				const { data, status } = verified;
+				console.log("🚀 ~ file: routes.tsx:29 ~ fetchVerified ~ data", data);
 
 				if (status === 201) {
 					localStorage.setItem(

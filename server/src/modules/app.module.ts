@@ -1,3 +1,4 @@
+import { OrdersModule } from "./orders.module";
 import { FavoriteProductsModule } from "./../models/favorite-products/favorite-products.module";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
@@ -23,6 +24,7 @@ import { UsersModule } from "./users.module";
 		AddressesModule,
 		EmployerModule,
 		FavoriteProductsModule,
+		OrdersModule,
 	],
 	controllers: [],
 	providers: [],

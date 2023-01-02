@@ -1,7 +1,5 @@
-import { IsBoolean, isBoolean } from "class-validator";
 import {
 	BaseEntity,
-	Column,
 	CreateDateColumn,
 	Entity,
 	ManyToOne,

@@ -1,6 +1,8 @@
 /* eslint-disable consistent-return */
 import axios from "axios";
 import * as React from "react";
+import { createOrderProduct } from "../../services/apis/products";
+import { ICreateOrderProductDto } from "../../services/types";
 import { IProducts } from "../../services/types/products";
 
 interface IFoodProductsProps {
@@ -41,6 +43,20 @@ const FoodProducts: React.FunctionComponent<IFoodProductsProps> = (props) => {
 		setIsStyleLove(!isStyleLove);
 		handleStyleLove(productID);
 	};
+
+	const addProductsToOrderProducts = async (
+		productsID: number,
+		cost: number
+	) => {
+		const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+		const data: ICreateOrderProductDto = {
+			key_product_id: productsID,
+			key_user_id: currentUser.user.id,
+			key_cost: cost,
+		};
+
+		await createOrderProduct(data);
+	};
 	return (
 		<>
 			<div className="flex flex-col my-12 items-center gap-1">
@@ -67,7 +83,10 @@ const FoodProducts: React.FunctionComponent<IFoodProductsProps> = (props) => {
 					<p className="text-sm font-semibold text-headingColor">
 						<span className="text-xs text-red-600">$</span> {product.cost}
 					</p>
-					<div className="rounded-full w-8 h-8 flex justify-center items-center bg-red-500">
+					<div
+						className="rounded-full w-8 h-8 flex justify-center items-center bg-red-500"
+						onClick={() => addProductsToOrderProducts(product.id, product.cost)}
+					>
 						<i className="ri-add-line text-white cursor-pointer" />
 					</div>
 				</div>

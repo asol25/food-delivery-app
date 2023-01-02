@@ -7,7 +7,7 @@
 	"arrowParens": "always",
 	"proseWrap": "always",
 	"requireConfig": false,
-	"printWidth": 80,
+	"printWidth": 100,
 	"useTabs": true,
 	"jsxBracketSameLine": false
 }

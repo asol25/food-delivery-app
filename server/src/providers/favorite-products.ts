@@ -1,9 +1,7 @@
-import { ProductsRepository } from "./../models/repositories/products.repository";
-import { BadRequestException, Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { CreateFavoriteProductDto } from "./../models/dtos/create-favorite-product.dto";
 import { FavoriteProductsRepository } from "./../models/repositories/favorite-products.repositoty";
 import { Favorites } from "./../models/tables/favorites";
-import { isArray } from "class-validator";
 
 @Injectable()
 export class FavoriteProductsService {
@@ -26,11 +24,6 @@ export class FavoriteProductsService {
 					},
 				});
 
-			if (
-				!isArray(productsRepositoryObject) ||
-				productsRepositoryObject.length === 0
-			)
-				throw new Error("user don't have favorite products");
 			return productsRepositoryObject;
 		} catch (error) {
 			this.logger.error(error);

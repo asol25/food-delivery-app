@@ -22,3 +22,14 @@ export interface IProducts {
 	updatedAt: Date;
 	category?: ICategory;
 }
+
+export interface IOrder {
+	[x: string]: any;
+	id: number;
+	userId: number;
+	productId: number;
+	product: IProducts;
+	quantity: number;
+	createdAt: Date;
+	updatedAt: Date;
+}
