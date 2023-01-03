@@ -2,8 +2,8 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateFavoriteProductDto {
 	@ApiProperty()
-	readonly product: number;
+	readonly key_product_id: number;
 
 	@ApiProperty()
-	readonly user: number;
+	readonly key_user_id: number;
 }

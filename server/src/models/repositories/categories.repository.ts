@@ -13,9 +13,7 @@ export class CategoriesRepository extends Repository<Categories> {
 		return await this.find();
 	}
 
-	async createCategory(
-		createCategoriesDto: CreateCategoriesDto
-	): Promise<Categories> {
+	async createCategory(createCategoriesDto: CreateCategoriesDto): Promise<Categories> {
 		const { name, thumbnail } = createCategoriesDto;
 
 		const category = new Categories();

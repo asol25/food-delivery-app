@@ -21,8 +21,6 @@ export class FavoriteController {
 
 	@Put("update/product")
 	deleteProducts(@Body() updateFavoriteProductDto: CreateFavoriteProductDto) {
-		return this.favoriteProductsService.updateProducts(
-			updateFavoriteProductDto
-		);
+		return this.favoriteProductsService.updateProducts(updateFavoriteProductDto);
 	}
 }

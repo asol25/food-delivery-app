@@ -11,9 +11,7 @@ export class OrdersRepository extends Repository<Orders> {
 		super(Orders, dataSource.createEntityManager());
 	}
 
-	async getOrderProductsByUserId(
-		getOrderProductsDto: GetOrderProductsDto
-	): Promise<Orders[]> {
+	async getOrderProductsByUserId(getOrderProductsDto: GetOrderProductsDto): Promise<Orders[]> {
 		try {
 			const { key_user_id } = getOrderProductsDto;
 			console.log(
@@ -35,9 +33,7 @@ export class OrdersRepository extends Repository<Orders> {
 		}
 	}
 
-	async createOrderProduct(
-		createOrderProductDto: CreateOrderProductDto
-	): Promise<Orders> {
+	async createOrderProduct(createOrderProductDto: CreateOrderProductDto): Promise<Orders> {
 		try {
 			const { key_user_id, key_product_id } = createOrderProductDto;
 			const foundProduct = await this.findOne({
@@ -59,12 +55,9 @@ export class OrdersRepository extends Repository<Orders> {
 		}
 	}
 
-	async updateQuantityOrderProducts(
-		createOrderProductDto: CreateOrderProductDto
-	): Promise<Orders> {
+	async updateQuantityOrderProducts(createOrderProductDto: CreateOrderProductDto): Promise<Orders> {
 		try {
-			const { key_user_id, key_product_id, key_quantity } =
-				createOrderProductDto;
+			const { key_user_id, key_product_id, key_quantity } = createOrderProductDto;
 			console.log(
 				"🚀 ~ file: orders.repository.ts:67 ~ OrdersRepository ~ key_user_id, key_product_id, key_quantity",
 				key_user_id,

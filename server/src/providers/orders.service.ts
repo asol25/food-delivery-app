@@ -13,8 +13,7 @@ export class OrdersService {
 
 	async getOrderProductsByUserId(getOrderProductsDto: GetOrderProductsDto) {
 		try {
-			const products =
-				this.ordersRepository.getOrderProductsByUserId(getOrderProductsDto);
+			const products = this.ordersRepository.getOrderProductsByUserId(getOrderProductsDto);
 
 			return products;
 		} catch (error) {
@@ -24,25 +23,13 @@ export class OrdersService {
 	}
 
 	async createOrderProduct(createOrderProductDto: CreateOrderProductDto) {
-		try {
-			const products = this.ordersRepository.createOrderProduct(
-				createOrderProductDto
-			);
-
-			return products;
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		const products = this.ordersRepository.createOrderProduct(createOrderProductDto);
+		return products;
 	}
 
-	async updateQuantityOrderProduct(
-		createOrderProductDto: CreateOrderProductDto
-	) {
+	async updateQuantityOrderProduct(createOrderProductDto: CreateOrderProductDto) {
 		try {
-			const products = this.ordersRepository.updateQuantityOrderProducts(
-				createOrderProductDto
-			);
+			const products = this.ordersRepository.updateQuantityOrderProducts(createOrderProductDto);
 
 			return products;
 		} catch (error) {

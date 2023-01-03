@@ -1,3 +1,4 @@
+import { PaymentModule } from "./../payment/payment.module";
 import { OrdersModule } from "./orders.module";
 import { FavoriteProductsModule } from "./../models/favorite-products/favorite-products.module";
 import { Module } from "@nestjs/common";
@@ -25,6 +26,7 @@ import { UsersModule } from "./users.module";
 		EmployerModule,
 		FavoriteProductsModule,
 		OrdersModule,
+		PaymentModule,
 	],
 	controllers: [],
 	providers: [],

@@ -12,17 +12,16 @@ export class FavoriteProductsService {
 
 	async getFavoriteProductsByUserID(userID: number): Promise<Favorites[]> {
 		try {
-			const productsRepositoryObject: Favorites[] =
-				await this.favoriteProductsRepository.find({
-					relations: {
-						product: true,
+			const productsRepositoryObject: Favorites[] = await this.favoriteProductsRepository.find({
+				relations: {
+					product: true,
+				},
+				where: {
+					user: {
+						id: userID,
 					},
-					where: {
-						user: {
-							id: userID,
-						},
-					},
-				});
+				},
+			});
 
 			return productsRepositoryObject;
 		} catch (error) {
@@ -32,10 +31,9 @@ export class FavoriteProductsService {
 
 	async createProduct(createFavoriteProductDto: CreateFavoriteProductDto) {
 		try {
-			const product: Favorites =
-				await this.favoriteProductsRepository.createEntity(
-					createFavoriteProductDto
-				);
+			const product: Favorites = await this.favoriteProductsRepository.createEntity(
+				createFavoriteProductDto
+			);
 
 			return product;
 		} catch (error) {
@@ -46,10 +44,9 @@ export class FavoriteProductsService {
 
 	async updateProducts(updateFavoriteProductDto: CreateFavoriteProductDto) {
 		try {
-			const product =
-				await this.favoriteProductsRepository.updateFavoriteProduct(
-					updateFavoriteProductDto
-				);
+			const product = await this.favoriteProductsRepository.updateFavoriteProduct(
+				updateFavoriteProductDto
+			);
 
 			return product;
 		} catch (error) {
