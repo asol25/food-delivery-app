@@ -20,9 +20,7 @@ export default function Routes(): ReturnType<typeof useRoutes> {
 					picture: user?.picture,
 				};
 				const verified = await axios.post(
-					`${
-						process.env.REACT_APP_SERVER_URL || "http://localhost:33714"
-					}/users/create/user`,
+					`${process.env.REACT_APP_SERVER_URL || "http://localhost:33714"}/users/create/user`,
 					send
 				);
 				const { data, status } = verified;
@@ -37,7 +35,10 @@ export default function Routes(): ReturnType<typeof useRoutes> {
 					);
 				}
 			};
-			fetchVerified();
+			const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+			if (user?.email?.includes(currentUser.user.email) === false) {
+				fetchVerified();
+			}
 		}
 		return () => {
 			isChecked = false;

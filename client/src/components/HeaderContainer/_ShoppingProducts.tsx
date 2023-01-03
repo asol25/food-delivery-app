@@ -89,6 +89,10 @@ const ShoppingProduct: React.FunctionComponent<IShoppingProductProps> = (props) 
 							<div
 								className="cursor-pointer"
 								onClick={() => {
+									dispatch({
+										type: "decrement",
+										value: orderProduct.product.cost * quantity,
+									});
 									deleteOrderDetailsProducts(orderProduct.id);
 								}}
 							>
