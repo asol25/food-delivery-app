@@ -23,7 +23,7 @@ export const TypeOrmModuleOptions: TypeOrmModuleAsyncOptions = {
 				path.join(__dirname, "../../models/tables/*.js"),
 			],
 			synchronize: true,
-			...(NODE_ENV === "DEVELOPMENT" ? { retryAttempts: 10, logging: true } : { logging: false }),
+			...(NODE_ENV === "DEVELOPMENT" ? { retryAttempts: 10, logging: false } : { logging: false }),
 		};
 
 		return option;

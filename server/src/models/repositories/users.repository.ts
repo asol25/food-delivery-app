@@ -1,9 +1,5 @@
 import { UpdateStatusUsersDto } from "./../dtos/update-users-status.dto";
-import {
-	Injectable,
-	InternalServerErrorException,
-	NotFoundException,
-} from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { DataSource, Repository } from "typeorm";
 import { PaginatedResult } from "../dtos/paginated-result.dto";
 import { CreateUserDto } from "./../dtos/create-users.dto";
@@ -58,9 +54,7 @@ export class UsersRepository extends Repository<Users> {
 		user.phone = phone;
 		user.picture = picture;
 		user.addressesId = addressesId;
-		user.sender = (await this.sender.createEntity(
-			MessagesType.EMPLOYEE
-		)) as unknown as Sender;
+		user.sender = (await this.sender.createEntity(MessagesType.EMPLOYEE)) as unknown as Sender;
 		user.receiver = (await this.receiver.createEntity(
 			MessagesType.EMPLOYEE
 		)) as unknown as Receiver;

@@ -9,7 +9,6 @@ import {
 } from "typeorm";
 import { EventRole } from "../enums";
 import { NotificationsDetail } from "./notificationsDetail";
-import { SchedulesDetail } from "./schedulesDetail";
 
 @Entity()
 export class Notifications extends BaseEntity {
@@ -26,17 +25,8 @@ export class Notifications extends BaseEntity {
 	@Column()
 	message: string;
 
-	@OneToMany(
-		() => NotificationsDetail,
-		(notificationsDetail) => notificationsDetail.notification
-	)
+	@OneToMany(() => NotificationsDetail, (notificationsDetail) => notificationsDetail.notification)
 	notificationsDetail!: NotificationsDetail[];
-
-	@OneToMany(
-		() => SchedulesDetail,
-		(scheduleDetail) => scheduleDetail.notification
-	)
-	schedulesDetail!: SchedulesDetail[];
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;

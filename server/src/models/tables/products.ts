@@ -17,7 +17,6 @@ import { Comments } from "./comments";
 import { Favorites } from "./favorites";
 import { NotificationsDetail } from "./notificationsDetail";
 import { Orders } from "./orders";
-import { SchedulesDetail } from "./schedulesDetail";
 
 export class ColumnNumericTransformer {
 	to(data: number): number {
@@ -87,17 +86,8 @@ export class Products extends BaseEntity {
 	@OneToMany(() => Orders, (orders) => orders.product)
 	orders!: Orders[];
 
-	@OneToMany(
-		() => NotificationsDetail,
-		(notificationsDetail) => notificationsDetail.product
-	)
+	@OneToMany(() => NotificationsDetail, (notificationsDetail) => notificationsDetail.product)
 	notificationsDetail!: NotificationsDetail[];
-
-	@OneToMany(
-		() => SchedulesDetail,
-		(schedulesDetail) => schedulesDetail.product
-	)
-	schedulesDetail!: SchedulesDetail[];
 
 	@OneToOne(() => Analysis)
 	@JoinColumn()

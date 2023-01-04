@@ -27,9 +27,19 @@ export class UsersService {
 				where: {
 					email: email,
 				},
+
+				select: {
+					id: true,
+					email: true,
+					receiver: {
+						id: true,
+					},
+					sender: {
+						id: true,
+					},
+				},
 			});
-			if (this.usersRepository.hasId(userResponseObject) === false)
-				throw new NotFoundException();
+			if (this.usersRepository.hasId(userResponseObject) === false) throw new NotFoundException();
 
 			return userResponseObject;
 		} catch (error) {
@@ -39,9 +49,7 @@ export class UsersService {
 	}
 	async getUsersWithPagination(getUsersPaginationDto: GetUsersPaginationDto) {
 		try {
-			const users = await this.usersRepository.getUsersWithPagination(
-				getUsersPaginationDto
-			);
+			const users = await this.usersRepository.getUsersWithPagination(getUsersPaginationDto);
 
 			if (!Array.isArray(users.data) || users.data.length == 0) {
 				throw new NotFoundException("No data");
@@ -66,8 +74,7 @@ export class UsersService {
 				},
 			});
 
-			if (this.usersRepository.hasId(isCheckUserExist) === true)
-				return isCheckUserExist;
+			if (this.usersRepository.hasId(isCheckUserExist) === true) return isCheckUserExist;
 
 			const user = await this.usersRepository.createUser(createUserDto);
 			return user;
@@ -77,13 +84,9 @@ export class UsersService {
 		}
 	}
 
-	async updateStatusUser(
-		updateStatusUsersDto: UpdateStatusUsersDto
-	): Promise<Users> {
+	async updateStatusUser(updateStatusUsersDto: UpdateStatusUsersDto): Promise<Users> {
 		try {
-			const user = await this.usersRepository.updateStatusUser(
-				updateStatusUsersDto
-			);
+			const user = await this.usersRepository.updateStatusUser(updateStatusUsersDto);
 
 			return user;
 		} catch (error) {

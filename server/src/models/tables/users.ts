@@ -18,7 +18,7 @@ import { Receiver } from "./message_receiver";
 import { Sender } from "./message_sender";
 import { NotificationsDetail } from "./notificationsDetail";
 import { Orders } from "./orders";
-import { SchedulesDetail } from "./schedulesDetail";
+import { Schedules } from "./schedules";
 
 @Entity()
 export class Users extends BaseEntity {
@@ -73,14 +73,11 @@ export class Users extends BaseEntity {
 	@JoinColumn()
 	sender: Sender;
 
-	@OneToMany(
-		() => NotificationsDetail,
-		(notificationsDetail) => notificationsDetail.user
-	)
+	@OneToMany(() => NotificationsDetail, (notificationsDetail) => notificationsDetail.user)
 	notificationsDetail!: NotificationsDetail[];
 
-	@OneToMany(() => SchedulesDetail, (scheduleDetail) => scheduleDetail.user)
-	schedulesDetail!: SchedulesDetail[];
+	@OneToMany(() => Schedules, (Schedules) => Schedules.user)
+	Schedules: Schedules[];
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;

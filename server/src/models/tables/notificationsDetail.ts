@@ -1,3 +1,4 @@
+import { Schedules } from "./schedules";
 import {
 	BaseEntity,
 	CreateDateColumn,
@@ -22,6 +23,9 @@ export class NotificationsDetail extends BaseEntity {
 	@PrimaryColumn()
 	notificationId!: number;
 
+	@PrimaryColumn()
+	schedulesId!: number;
+
 	@ManyToOne(() => Products, (product) => product.notificationsDetail)
 	@JoinColumn({ name: "productId" })
 	product!: Products;
@@ -30,12 +34,13 @@ export class NotificationsDetail extends BaseEntity {
 	@JoinColumn({ name: "userId" })
 	user!: Users;
 
-	@ManyToOne(
-		() => Notifications,
-		(notification) => notification.notificationsDetail
-	)
+	@ManyToOne(() => Notifications, (notification) => notification.notificationsDetail)
 	@JoinColumn({ name: "notificationId" })
 	notification!: Notifications;
+
+	@ManyToOne(() => Schedules, (schedules) => schedules.notificationsDetail)
+	@JoinColumn({ name: "schedulesId" })
+	schedules!: Schedules;
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;
