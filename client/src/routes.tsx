@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import React from "react";
@@ -24,7 +25,6 @@ export default function Routes(): ReturnType<typeof useRoutes> {
 					send
 				);
 				const { data, status } = verified;
-				console.log("🚀 ~ file: routes.tsx:29 ~ fetchVerified ~ data", data);
 
 				if (status === 201) {
 					localStorage.setItem(
@@ -36,9 +36,17 @@ export default function Routes(): ReturnType<typeof useRoutes> {
 				}
 			};
 			const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-			if (user?.email?.includes(currentUser.user.email) === false) {
+			const isCheckedCurrentUser = currentUser.hasOwnProperty("user");
+			let isCheckedUser;
+			if (isCheckedCurrentUser) {
+				isCheckedUser = user?.email?.includes(currentUser.user.email) === true;
+			}
+
+			if (!isCheckedCurrentUser && !isCheckedUser) {
 				fetchVerified();
 			}
+		} else {
+			localStorage.setItem("currentUser", JSON.stringify({}));
 		}
 		return () => {
 			isChecked = false;

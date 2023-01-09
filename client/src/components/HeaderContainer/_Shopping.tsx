@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable consistent-return */
@@ -9,14 +10,17 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { Button, Divider, Drawer } from "@mui/material";
-import axios from "axios";
+import dayjs, { Dayjs } from "dayjs";
 import * as React from "react";
 import { NumericFormat } from "react-number-format";
 import { useCount } from "../../customs/sub-total-context";
 import { createTransaction } from "../../services/apis/payment";
+import { deleteOrderProductByOrderId, getOrderProduct } from "../../services/apis/products";
 import { IPayment } from "../../services/types";
 import { IOrder } from "../../services/types/products";
 import ProcessInformation from "./_Information";
+import PolicyPayment from "./_PolicyPayment";
+import PolicyRefund from "./_PolicyRefund";
 import ProcessPayment from "./_ProcessPayment";
 import ShoppingProduct from "./_ShoppingProducts";
 
@@ -31,13 +35,13 @@ type Information =
 	| "address_one"
 	| "address_two"
 	| "phone_one"
-	| "phone_two";
+	| "phone_two"
+	| "time_picker";
 interface IShoppingProps {}
 
 const Shopping: React.FunctionComponent<IShoppingProps> = () => {
 	const { total, dispatch } = useCount();
 	const { user } = useAuth0();
-	const [isCheckedToggle, setIsCheckedToggle] = React.useState<boolean>(false);
 	const anchor: Anchor = "right";
 	const [state, setState] = React.useState({
 		top: false,
@@ -45,7 +49,6 @@ const Shopping: React.FunctionComponent<IShoppingProps> = () => {
 		bottom: false,
 		right: false,
 	});
-	const [orderProducts, setOrderProducts] = React.useState<IOrder[] | null | undefined>(null);
 	const [paymentLink, setPaymentLink] = React.useState<string>("");
 	const [information, setInformation] = React.useState<IPayment>({
 		amount: 0,
@@ -57,7 +60,14 @@ const Shopping: React.FunctionComponent<IShoppingProps> = () => {
 		address_two: null,
 		phone_one: null,
 		phone_two: null,
+		time_picker: null,
 	});
+	const [currentDate, setCurrentDate] = React.useState<Dayjs | null>(dayjs("2022-04-07"));
+	const [activeStep, setActiveStep] = React.useState(0);
+
+	// Variable to clean request in hook.
+	const [isCheckedToggle, setIsCheckedToggle] = React.useState<boolean>(false);
+	const [orderProducts, setOrderProducts] = React.useState<IOrder[] | undefined>(undefined);
 
 	const sendInformation = () => createTransaction(information);
 
@@ -68,16 +78,19 @@ const Shopping: React.FunctionComponent<IShoppingProps> = () => {
 		}));
 	};
 
-	const [activeStep, setActiveStep] = React.useState(0);
-
 	const handleNext = async (operator: boolean) => {
 		if (operator && activeStep !== 3) {
 			return setActiveStep(activeStep + 1);
 		}
+
 		if (activeStep === 3) {
 			handleChangeInformation("amount", total.count * 20000 * 100);
+			const calender = `${dayjs(currentDate).format("YYYY-MM-DDTHH:mm:ss")}`;
+			handleChangeInformation("time_picker", calender);
 			const finalCase = await sendInformation();
 			if (finalCase.status === 201) {
+				console.log(finalCase.data);
+
 				setPaymentLink(finalCase.data);
 			}
 			return;
@@ -87,16 +100,19 @@ const Shopping: React.FunctionComponent<IShoppingProps> = () => {
 
 	const totalIncome = (products: IOrder[]): number => {
 		let total = 0;
-		products?.filter((orderProduct: IOrder) => {
-			total += orderProduct.quantity * orderProduct.product.cost;
-		});
+		if (products.length > 0) {
+			products?.filter((orderProduct: IOrder) => {
+				if (orderProduct.productId) {
+					total += orderProduct.quantity * orderProduct.product.cost;
+				}
+			});
+		}
 		return total;
 	};
 
 	const toggleDrawer =
 		(anchor: string, open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
 			setPaymentLink("");
-			setIsCheckedToggle(true);
 			setActiveStep(0);
 			setInformation({
 				amount: 0,
@@ -108,6 +124,7 @@ const Shopping: React.FunctionComponent<IShoppingProps> = () => {
 				address_two: null,
 				phone_one: null,
 				phone_two: null,
+				time_picker: null,
 			});
 			if (
 				event.type === "keydown" &&
@@ -116,46 +133,87 @@ const Shopping: React.FunctionComponent<IShoppingProps> = () => {
 			) {
 				return;
 			}
-
+			if (open === true) {
+				setIsCheckedToggle(true);
+			}
+			setOrderProducts(undefined);
 			setState({ ...state, [anchor]: open });
 		};
 
-	const handleDeleteOrderProducts = (orderId: string | number) => {
-		const newFilter = orderProducts?.filter((orderProduct: IOrder) => orderProduct.id !== orderId);
-		setOrderProducts(newFilter);
+	const handleDeleteOrderProducts = (orderId: number) => {
+		setOrderProducts(orderProducts?.filter((orderProduct: IOrder) => orderProduct.id !== orderId));
 	};
 
-	const deleteOrderDetailsProducts = async (orderDetailsID: string | number) => {
-		const ordersResponse = await axios.delete(
-			`${
-				process.env.REACT_APP_VERCEL_ENV_API_DOMAIN || "http://localhost:33714"
-			}/orders/delete-order-products/${orderDetailsID}`
-		);
+	const deleteOrderDetailsProducts = async (orderDetailsID: number) => {
+		console.log(orderDetailsID);
 
-		if (ordersResponse.status === 200 && ordersResponse.data.affected === 1) {
+		const ordersResponse = await deleteOrderProductByOrderId(orderDetailsID);
+		if (ordersResponse.status === 200 && ordersResponse.data === 1) {
 			handleDeleteOrderProducts(orderDetailsID);
 		}
 	};
 
+	const getStepContent = (activeStep: number) => {
+		switch (activeStep) {
+			case 0:
+				return (
+					<ProcessInformation
+						currentDate={currentDate}
+						setCurrentDate={setCurrentDate}
+						user={user}
+						handleChangeInformation={handleChangeInformation}
+					/>
+				);
+			case 1:
+				return <PolicyPayment />;
+			case 2:
+				return <PolicyRefund />;
+			case 3:
+				return;
+			default:
+				throw new Error("Unknown step");
+		}
+	};
+
+	const getStepButton = (activeStep: number) => {
+		switch (activeStep) {
+			case 0:
+			case 1:
+			case 2:
+				return (
+					<>
+						<Button onClick={() => handleNext(false)}>
+							<p className="mx-6">Back</p>
+						</Button>
+						<Button onClick={() => handleNext(true)}>Next</Button>
+					</>
+				);
+			case 3:
+				return (
+					<>
+						<Button>
+							<p className="mx-6">Back</p>
+						</Button>
+						<Button onClick={() => handleNext(true)}>
+							<a href={paymentLink}>Finish</a>
+						</Button>
+					</>
+				);
+			default:
+				break;
+		}
+	};
 	React.useEffect(() => {
 		let isChecked = true;
 		if (isChecked && isCheckedToggle === true) {
 			const fetchOrderProducts = async () => {
 				const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-				const data = {
-					key_user_id: currentUser.user.id,
-				};
-				if (data) {
-					const ordersResponse = await axios.post(
-						`${
-							process.env.REACT_APP_VERCEL_ENV_API_DOMAIN || "http://localhost:33714"
-						}/orders/get-order-products`,
-						data
-					);
-					if (ordersResponse.status === 201) {
+				if (currentUser.hasOwnProperty("user")) {
+					const ordersResponse = await getOrderProduct(currentUser.user.id);
+					if (ordersResponse.status === 200) {
 						setOrderProducts(ordersResponse.data);
 						dispatch({
-							type: "int",
+							type: "init",
 							value: totalIncome(ordersResponse.data),
 						});
 						setIsCheckedToggle(false);
@@ -204,14 +262,9 @@ const Shopping: React.FunctionComponent<IShoppingProps> = () => {
 
 										<div className="mt-8">
 											<ProcessPayment step={activeStep} />
-											<div className="mx-auto mt-12">
-												<ProcessInformation
-													activeStep={activeStep}
-													user={user}
-													paymentLink={paymentLink}
-													handleChangeInformation={handleChangeInformation}
-													handleNext={handleNext}
-												/>
+											<div className="mx-auto mt-12">{getStepContent(activeStep)}</div>
+											<div className="flex flex-row justify-around mt-6">
+												{getStepButton(activeStep)}
 											</div>
 										</div>
 									</div>

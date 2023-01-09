@@ -1,9 +1,10 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+import { useAuth0 } from "@auth0/auth0-react";
 import {
 	Alert,
 	Breadcrumbs,
-	Button,
 	Dialog,
 	DialogTitle,
 	Link,
@@ -31,25 +32,27 @@ const MESSAGE_RESPONSE = {
 };
 const FoodDetails: React.FunctionComponent<IFoodDetailsProps> = (props) => {
 	const { product, products, open, title, onClose } = props;
+	const { loginWithPopup } = useAuth0();
 	const [valueRating, setValueRating] = React.useState<number | null>(product.rating);
 	const [error, setError] = React.useState<boolean>(false);
 	let message = MESSAGE_RESPONSE.successfully;
 	const handleClick = () => {
 		setError(true);
 	};
-	const addToShoppingCart = async () => {
-		const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-		const data: ICreateOrderProductDto = {
-			key_user_id: currentUser.user.id,
-			key_product_id: product.id,
-		};
 
-		if (data.key_product_id && data.key_product_id) {
+	const addToShoppingCart = async (productId: number) => {
+		const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+
+		if (currentUser.hasOwnProperty("user") && productId) {
+			const data: ICreateOrderProductDto = {
+				key_user_id: currentUser.user.id,
+				key_product_id: productId,
+			};
 			const response = await createOrderProduct(data);
-			if (response.status === 201) {
-				handleClick();
-			}
+			if (response.status === 201) handleClick();
 			message = MESSAGE_RESPONSE.error;
+		} else {
+			loginWithPopup();
 		}
 	};
 
@@ -104,7 +107,7 @@ const FoodDetails: React.FunctionComponent<IFoodDetailsProps> = (props) => {
 							<p className="text-base md:mr-56 font-light">{product.desc}</p>
 							<div className="mt-8">
 								<button
-									onClick={addToShoppingCart}
+									onClick={() => addToShoppingCart(product.id)}
 									className="px-12 py-2 border border-black text-base"
 								>
 									ADD TO CART

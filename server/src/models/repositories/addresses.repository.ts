@@ -10,9 +10,7 @@ export class AddressesRepository extends Repository<Addresses> {
 	constructor(private dataSource: DataSource) {
 		super(Addresses, dataSource.createEntityManager());
 	}
-	async getAddressesByUserId(
-		getAddressesFilterUser: GetAddressesFilterUser
-	): Promise<Addresses> {
+	async getAddressesByUserId(getAddressesFilterUser: GetAddressesFilterUser): Promise<Addresses> {
 		const { userId } = getAddressesFilterUser;
 		const address = await this.findOne({
 			where: {

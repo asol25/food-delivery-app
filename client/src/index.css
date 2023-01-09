@@ -78,4 +78,8 @@
 		left: 50%;
 		transform: translateX(-50%);
 	}
+
+	.custom-timer .css-u791bf-MuiPickersArrowSwitcher-root-MuiClockPicker-arrowSwitcher {
+		top: 58px !important;
+	}
 }

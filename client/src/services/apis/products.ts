@@ -1,5 +1,6 @@
+/* eslint-disable camelcase */
 import axios from "axios";
-import { ICreateOrderProductDto, IDeleteByIdDto } from "../types";
+import { ICreateOrderProductDto, IUpdateOrderProductDto } from "../types";
 
 export const getProducts = async (_page: number, _limit: number) => {
 	const products = await axios.get(
@@ -21,35 +22,38 @@ export const getProductsByViews = async () => {
 	return products;
 };
 
+export const getOrderProduct = async (userId: number) => {
+	const products = await axios.get(
+		`${process.env.REACT_APP_VERCEL_ENV_API_DOMAIN || "http://localhost:33714"}/shopping/${userId}`
+	);
+	return products;
+};
+
 export const createOrderProduct = async (data: ICreateOrderProductDto) => {
 	const products = await axios.post(
-		`${
-			process.env.REACT_APP_VERCEL_ENV_API_DOMAIN || "http://localhost:33714"
-		}/orders/create-order-products`,
+		`${process.env.REACT_APP_VERCEL_ENV_API_DOMAIN || "http://localhost:33714"}/shopping`,
 		data
 	);
 
 	return products;
 };
 
-export const updateQuantityOrderProduct = async (
-	data: ICreateOrderProductDto
-) => {
-	const products = await axios.put(
-		`${
-			process.env.REACT_APP_VERCEL_ENV_API_DOMAIN || "http://localhost:33714"
-		}/orders/update-quantity-order-products`,
+export const updateQuantityOrderProduct = async (data: IUpdateOrderProductDto) => {
+	console.log(data);
+
+	const products = await axios.patch(
+		`${process.env.REACT_APP_VERCEL_ENV_API_DOMAIN || "http://localhost:33714"}/shopping`,
 		data
 	);
 
 	return products;
 };
 
-export const deleteOrderProductByOrderId = async (data: IDeleteByIdDto) => {
-	const products = await axios.post(
+export const deleteOrderProductByOrderId = async (orderDetailsID: number) => {
+	const products = await axios.delete(
 		`${
 			process.env.REACT_APP_VERCEL_ENV_API_DOMAIN || "http://localhost:33714"
-		}/orders/delete-order-products/${data.key_id}`
+		}/shopping/${orderDetailsID}`
 	);
 
 	return products;

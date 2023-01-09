@@ -3,12 +3,11 @@ export * as ProductsType from "./products";
 export interface ICreateOrderProductDto {
 	key_user_id: number;
 	key_product_id: number;
-	key_cost?: number;
-	key_quantity?: number;
 }
 
-export interface IDeleteByIdDto {
-	key_id: number | string;
+export interface IUpdateOrderProductDto {
+	key_shopping_id: number;
+	key_product_quantity: number;
 }
 
 export interface IGetOrderProducts {
@@ -25,4 +24,5 @@ export interface IPayment {
 	address_two: string | null;
 	phone_one: string | null;
 	phone_two: string | null;
+	time_picker: string | null;
 }

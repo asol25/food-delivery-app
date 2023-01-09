@@ -24,7 +24,6 @@ export interface IProducts {
 }
 
 export interface IOrder {
-	[x: string]: any;
 	id: number;
 	userId: number;
 	productId: number;

@@ -92,8 +92,9 @@ const ColorlibStepIconRoot = styled("div")<{
 
 const steps = [
 	"Select information settings",
-	"Start payment via system",
-	"End && moving to Shipping",
+	"Reading Policy Payment",
+	"Reading Policy Refund",
+	"End && Payment",
 ];
 
 interface IProcessPaymentProps {

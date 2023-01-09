@@ -19,6 +19,8 @@ import { Sender } from "./message_sender";
 import { NotificationsDetail } from "./notificationsDetail";
 import { Orders } from "./orders";
 import { Schedules } from "./schedules";
+import { ShoppingCart } from "./shopping-cart";
+import { Transaction } from "./transaction";
 
 @Entity()
 export class Users extends BaseEntity {
@@ -59,11 +61,17 @@ export class Users extends BaseEntity {
 	@OneToMany(() => Comments, (comment) => comment.users)
 	comments: Comments[];
 
+	@OneToMany(() => Transaction, (Transaction) => Transaction.user)
+	transactions: Transaction[];
+
 	@OneToMany(() => Orders, (order) => order.user)
 	orders: Orders[];
 
 	@OneToMany(() => Favorites, (favorite) => favorite.user)
 	favorites: Favorites[];
+
+	@OneToMany(() => ShoppingCart, (ShoppingCart) => ShoppingCart.user)
+	shopping!: ShoppingCart[];
 
 	@OneToOne(() => Receiver)
 	@JoinColumn()

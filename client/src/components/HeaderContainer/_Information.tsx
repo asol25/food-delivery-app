@@ -1,8 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { User } from "@auth0/auth0-react";
-import Button from "@mui/material/Button/Button";
+import Popover from "@mui/material/Popover/Popover";
+import TextField, { TextFieldProps } from "@mui/material/TextField";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker";
+import dayjs, { Dayjs } from "dayjs";
 import * as React from "react";
 
 type Information =
@@ -18,14 +24,24 @@ type Information =
 
 interface IInformationProps {
 	user: User | undefined;
-	paymentLink: string;
-	activeStep: number;
+	currentDate: dayjs.Dayjs | null;
+	setCurrentDate: React.Dispatch<React.SetStateAction<dayjs.Dayjs | null>>;
 	handleChangeInformation: (name: Information, value: number | string) => void;
-	handleNext: (operator: boolean) => Promise<void>;
 }
 
 const ProcessInformation: React.FunctionComponent<IInformationProps> = (props) => {
-	const { user, paymentLink, activeStep, handleChangeInformation, handleNext } = props;
+	const { user, currentDate, setCurrentDate, handleChangeInformation } = props;
+	const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	const open = Boolean(anchorEl);
+	const id = open ? "simple-popover" : undefined;
 	return (
 		<>
 			<div className="flex md:flex-row flex-col md:items-center justify-center  gap-8 md:gap-16">
@@ -179,20 +195,52 @@ const ProcessInformation: React.FunctionComponent<IInformationProps> = (props) =
 					</label>
 				</div>
 			</div>
-
-			<div className="flex flex-row justify-around mt-6">
-				{activeStep <= 3 && (
-					<Button onClick={() => handleNext(false)}>
-						<p className="mx-6">Back</p>
-					</Button>
-				)}
-				<Button onClick={() => handleNext(true)}>
-					{paymentLink ? (
-						<a href={paymentLink}>Finish</a>
-					) : (
-						<p className="mx-6"> {activeStep === 2 ? "Finish" : "Next"}</p>
+			<div className="mt-8 flex flex-col md:items-center">
+				<button
+					type="button"
+					onClick={(event) => handleClick(event)}
+					className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-base font-medium text-slate-700"
+				>
+					If you want to create schedules for food click in here.
+				</button>
+				<div className="flex flex-col min-w-[320px] ">
+					{open && (
+						<Popover
+							open={open}
+							anchorOrigin={{
+								vertical: "top",
+								horizontal: "center",
+							}}
+							transformOrigin={{
+								vertical: "top",
+								horizontal: "center",
+							}}
+							onClose={handleClose}
+						>
+							<h3 className="text-center m-2">The food open: 6h - 20h</h3>
+							<p className="text-center m-2 custom-timer">
+								{currentDate &&
+									`${currentDate.hour()} : ${currentDate.minute()} : ${currentDate.second()}`}
+								<LocalizationProvider dateAdapter={AdapterDayjs}>
+									<StaticTimePicker
+										displayStaticWrapperAs="desktop"
+										value={currentDate}
+										onChange={(newValue) => {
+											const open = newValue?.hour() !== undefined && newValue?.hour() >= 6;
+											const close = newValue?.hour() !== undefined && newValue?.hour() <= 20;
+											if (open && close) {
+												setCurrentDate(newValue);
+											}
+										}}
+										renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
+											<TextField {...params} />
+										)}
+									/>
+								</LocalizationProvider>
+							</p>
+						</Popover>
 					)}
-				</Button>
+				</div>
 			</div>
 		</>
 	);

@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 import * as React from "react";
 
 type Action =
-	| { type: "int"; value: number }
+	| { type: "init"; value: number }
 	| { type: "increment"; value: number }
 	| { type: "decrement"; value: number };
 
@@ -15,7 +16,7 @@ const CountStateContext = React.createContext<{ total: State; dispatch: Dispatch
 
 function countReducer(state: State, action: Action) {
 	switch (action.type) {
-		case "int": {
+		case "init": {
 			return { count: action.value };
 		}
 		case "increment": {

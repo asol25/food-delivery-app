@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable consistent-return */
@@ -11,7 +12,7 @@ import { IProducts } from "../types/products";
 export const ProductsHook = () => {
 	const [products, setProducts] = React.useState<ProductsType.IProducts[]>([]);
 	const [productsFavorite, setProductsFavorite] = React.useState<ProductsType.IProducts[]>([]);
-	const [limitProducts, setLimitProducts] = React.useState<number>(30);
+	const [limitProducts, setLimitProducts] = React.useState<number>(10);
 	const [startProducts, setStartProducts] = React.useState<number>(1);
 	const [cleanFetch, setCleanFetch] = React.useState<boolean>(true);
 	const handleGetProductsByLimit = (_limit: number) => {
@@ -50,8 +51,7 @@ export const ProductsHook = () => {
 	const getFavoriteProducts = async () => {
 		try {
 			const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-
-			if (currentUser !== null && currentUser !== undefined) {
+			if (currentUser.hasOwnProperty("user")) {
 				const productsFavoriteOfClient = await axios(
 					`${
 						process.env.REACT_APP_SERVER_URL || "http://localhost:33714"
@@ -100,7 +100,7 @@ export const ProductsHook = () => {
 					setProductsFavorite(productsFavoriteResponse);
 					setCleanFetch(false);
 				} catch (error) {
-					console.log("🚀 ~ file: productsHook.tsx ~ fetchProducts ~ error", error);
+					console.error(error);
 				}
 			};
 			fetchProducts();

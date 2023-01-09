@@ -1,3 +1,5 @@
+import { Transaction } from "./transaction";
+import { OrderDetails } from "./order-details";
 import {
 	BaseEntity,
 	Column,
@@ -5,10 +7,11 @@ import {
 	Entity,
 	JoinColumn,
 	ManyToOne,
+	OneToMany,
+	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
-import { Products } from "./products";
 import { Users } from "./users";
 
 @Entity()
@@ -20,19 +23,20 @@ export class Orders extends BaseEntity {
 	userId!: number;
 
 	@Column({ nullable: true })
-	productId!: number;
+	transactionId!: number;
 
-	@Column({ default: 1 })
-	quantity: number;
+	@ManyToOne(() => Users, (users: Users) => users.orders)
+	@JoinColumn()
+	user: Users;
 
-	@ManyToOne(() => Users, (user) => user.orders)
-	@JoinColumn({ name: "userId" })
-	user!: Users;
+	@OneToMany(() => OrderDetails, (orderDetails) => orderDetails.order)
+	orderDetails: OrderDetails[];
 
-	@ManyToOne(() => Products, (products) => products.orders)
-	@JoinColumn({ name: "productId" })
-	product!: Products;
+	@OneToOne(() => Transaction)
+	@JoinColumn({ name: "transactionId" })
+	transaction: Transaction;
 
+	@Column({ nullable: true })
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;
 

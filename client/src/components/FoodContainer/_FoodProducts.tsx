@@ -60,7 +60,6 @@ const FoodProducts: React.FunctionComponent<IFoodProductsProps> = (props) => {
 		const data: ICreateOrderProductDto = {
 			key_product_id: productsID,
 			key_user_id: currentUser.user.id,
-			key_cost: cost,
 		};
 
 		await createOrderProduct(data);

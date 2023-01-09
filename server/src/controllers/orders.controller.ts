@@ -1,36 +1,18 @@
-import { CreateOrderProductDto } from "./../models/dtos/create-order-product.dto";
-import { DeleteByIdDto } from "./../models/dtos/delete-only-id.dto";
-import { GetOrderProductsDto } from "./../models/dtos/get-order-products.dto";
-import { OrdersService } from "./../providers/orders.service";
+import { Body, Controller, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { Body, Controller, Delete, Param, Post, Put } from "@nestjs/common";
+import { CreateOrderDetailDto } from "./../models/dtos/create-order-details.dto";
+import { OrderDetails } from "./../models/tables/order-details";
+import { OrdersService } from "./../providers/orders.service";
 
 @ApiTags("orders")
 @Controller("orders")
 export class OrdersController {
 	constructor(private ordersService: OrdersService) {}
 
-	@Post("get-order-products")
-	getOrderProductsByUserId(@Body() getOrderProductsDto: GetOrderProductsDto) {
-		return this.ordersService.getOrderProductsByUserId(getOrderProductsDto);
-	}
-
-	@Post("create-order-products")
-	createOrderProductsByUserId(
-		@Body() createOrderProductDto: CreateOrderProductDto
-	) {
-		return this.ordersService.createOrderProduct(createOrderProductDto);
-	}
-
-	@Put("update-quantity-order-products")
-	updateQuantityOrderProducts(
-		@Body() createOrderProductDto: CreateOrderProductDto
-	) {
-		return this.ordersService.updateQuantityOrderProduct(createOrderProductDto);
-	}
-
-	@Delete("delete-order-products/:key_id")
-	deleteOrderProduct(@Param() deleteByIdDto: DeleteByIdDto) {
-		return this.ordersService.deleteOrderProduct(deleteByIdDto);
+	@Post("order-details")
+	async createOrderDetails(
+		@Body() createOrderDetailDto: CreateOrderDetailDto
+	): Promise<OrderDetails[]> {
+		return this.ordersService.createOrderDetails(createOrderDetailDto);
 	}
 }

@@ -20,7 +20,7 @@ export class PaymentController {
 			req.connection.socket.remoteAddress;
 		console.log(createPaymentDto);
 
-		const secretKey = process.env.PAYMENT_SECRET_KEY;
+		const secretKey = String(process.env.PAYMENT_SECRET_KEY);
 		let vnpUrl = process.env.PAYMENT_URL;
 		const time = moment().format("YYYYMMDDHHmmss");
 
@@ -28,7 +28,7 @@ export class PaymentController {
 		let vnp_Params = {};
 		vnp_Params["vnp_Version"] = "2.1.0";
 		vnp_Params["vnp_Command"] = "pay";
-		vnp_Params["vnp_TmnCode"] = process.env.PAYMENT_CODE;
+		vnp_Params["vnp_TmnCode"] = String(process.env.PAYMENT_CODE);
 		vnp_Params["vnp_Locale"] = createPaymentDto.language;
 		vnp_Params["vnp_CurrCode"] = currCode;
 		vnp_Params["vnp_TxnRef"] = time;
@@ -50,6 +50,7 @@ export class PaymentController {
 		const crypto = require("crypto");
 		const hmac = crypto.createHmac("sha512", secretKey);
 		const signed = hmac.update(new Buffer(signData, "utf-8")).digest("hex");
+
 		vnp_Params["vnp_SecureHash"] = signed;
 		vnpUrl += "?" + querystring.stringify(vnp_Params, { encode: false });
 

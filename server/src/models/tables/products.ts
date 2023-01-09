@@ -1,3 +1,5 @@
+import { ShoppingCart } from "./shopping-cart";
+import { OrderDetails } from "./order-details";
 import { IsInt, Max, Min } from "class-validator";
 import {
 	BaseEntity,
@@ -83,8 +85,11 @@ export class Products extends BaseEntity {
 	@OneToMany(() => Favorites, (favorite) => favorite.product)
 	favorites: Favorites[];
 
-	@OneToMany(() => Orders, (orders) => orders.product)
-	orders!: Orders[];
+	@OneToMany(() => OrderDetails, (OrderDetails) => OrderDetails.product)
+	OrderDetails!: OrderDetails[];
+
+	@OneToMany(() => ShoppingCart, (ShoppingCart) => ShoppingCart.product)
+	shopping!: ShoppingCart[];
 
 	@OneToMany(() => NotificationsDetail, (notificationsDetail) => notificationsDetail.product)
 	notificationsDetail!: NotificationsDetail[];
