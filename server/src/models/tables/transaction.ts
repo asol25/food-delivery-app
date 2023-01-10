@@ -1,3 +1,4 @@
+import { Max, Min } from "class-validator";
 import {
 	BaseEntity,
 	Column,
@@ -5,11 +6,9 @@ import {
 	Entity,
 	JoinTable,
 	ManyToOne,
-	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
-import { Orders } from "./orders";
 import { Users } from "./users";
 
 @Entity()
@@ -19,6 +18,18 @@ export class Transaction extends BaseEntity {
 
 	@Column({ nullable: true })
 	userId!: number;
+
+	@Column({ default: false })
+	status: boolean;
+
+	@Column({ nullable: true })
+	@Min(0)
+	@Max(10)
+	bank!: string;
+
+	@Column({ default: 0 })
+	@Min(0)
+	amount: number;
 
 	@ManyToOne(() => Users, (user) => user.transactions)
 	@JoinTable()

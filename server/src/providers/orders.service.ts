@@ -1,3 +1,4 @@
+import { SchedulesRepository } from "./../models/repositories/schedules.repository";
 import { Injectable, Logger } from "@nestjs/common";
 import { CreateOrderDetailDto } from "./../models/dtos/create-order-details.dto";
 import { OrderDetailsRepository } from "./../models/repositories/order-details.repository";
@@ -15,9 +16,9 @@ export class OrdersService {
 
 	async createOrderDetails(createOrderDetailDto: CreateOrderDetailDto): Promise<OrderDetails[]> {
 		try {
-			const { key_user_id, products } = createOrderDetailDto;
-			this.logger.log("[Service] - Create OrderRecord with key: userID = " + key_user_id);
-			const { id } = await this.ordersRepository.createRecord(key_user_id);
+			const { products } = createOrderDetailDto;
+			const { id } = await this.ordersRepository.createRecord(createOrderDetailDto);
+
 			const promiseOrderDetails: Promise<OrderDetails>[] = products.map((product) => {
 				return this.orderDetailsRepository.createRecord({
 					key_order_id: id,

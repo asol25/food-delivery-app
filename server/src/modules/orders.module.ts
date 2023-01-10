@@ -1,3 +1,5 @@
+import { OrdersStatusRepository } from "./../models/repositories/order-status.repository";
+import { SchedulesRepository } from "./../models/repositories/schedules.repository";
 import { TransactionRepository } from "./../models/repositories/transaction.repository";
 import { OrderDetailsRepository } from "./../models/repositories/order-details.repository";
 import { OrderDetails } from "./../models/tables/order-details";
@@ -12,6 +14,13 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 @Module({
 	imports: [TypeOrmModule.forFeature([Orders, OrderDetails])],
 	controllers: [OrdersController],
-	providers: [OrdersService, OrdersRepository, OrderDetailsRepository, TransactionRepository],
+	providers: [
+		OrdersService,
+		OrdersRepository,
+		OrderDetailsRepository,
+		TransactionRepository,
+		SchedulesRepository,
+		OrdersStatusRepository,
+	],
 })
 export class OrdersModule {}

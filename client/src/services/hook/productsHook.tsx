@@ -6,12 +6,11 @@
 import axios from "axios";
 import * as React from "react";
 import * as apis from "../apis/index";
-import { ProductsType } from "../types";
 import { IProducts } from "../types/products";
 
 export const ProductsHook = () => {
-	const [products, setProducts] = React.useState<ProductsType.IProducts[]>([]);
-	const [productsFavorite, setProductsFavorite] = React.useState<ProductsType.IProducts[]>([]);
+	const [products, setProducts] = React.useState<IProducts[]>([]);
+	const [productsFavorite, setProductsFavorite] = React.useState<IProducts[]>([]);
 	const [limitProducts, setLimitProducts] = React.useState<number>(10);
 	const [startProducts, setStartProducts] = React.useState<number>(1);
 	const [cleanFetch, setCleanFetch] = React.useState<boolean>(true);

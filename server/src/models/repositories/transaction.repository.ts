@@ -11,10 +11,13 @@ export class TransactionRepository extends Repository<Transaction> {
 	}
 
 	async createRecord(createTransactionDto: CreateTransactionDto): Promise<Transaction> {
-		const { key_user_id } = createTransactionDto;
+		const { key_user_id, bankCode, status, total_amount } = createTransactionDto;
 		this.logger.log("[Repository] - Create Transaction with key: userId = " + key_user_id);
 		const transaction = new Transaction();
 		transaction.userId = key_user_id;
+		transaction.bank = bankCode;
+		transaction.amount = total_amount;
+		transaction.status = status;
 		try {
 			await transaction.save();
 		} catch (error) {

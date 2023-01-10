@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, ValidateNested } from "class-validator";
+import { IsArray, IsBoolean, ValidateNested } from "class-validator";
 
 class Products {
 	@ApiProperty()
@@ -19,4 +19,17 @@ export class CreateOrderDetailDto {
 	@ValidateNested({ each: true })
 	@Type(() => Products)
 	readonly products: Products[];
+
+	@ApiProperty()
+	bankCode: string;
+
+	@ApiProperty()
+	total_amount: number;
+
+	@ApiProperty({ default: false })
+	@IsBoolean()
+	status: boolean;
+
+	@ApiProperty({ nullable: true })
+	schedule_timer!: string;
 }

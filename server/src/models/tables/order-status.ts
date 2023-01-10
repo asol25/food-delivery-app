@@ -3,35 +3,33 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
-	JoinColumn,
+	JoinTable,
 	ManyToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
 import { Orders } from "./orders";
-import { Products } from "./products";
+import { Status } from "./status";
 
+const PENDING_PAYMENT = 4;
 @Entity()
-export class OrderDetails extends BaseEntity {
+export class Order_Status extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
 	@Column({ nullable: true })
 	orderId!: number;
 
-	@Column({ nullable: true })
-	productId!: number;
+	@Column({ default: PENDING_PAYMENT })
+	statusId!: number;
 
-	@Column({ default: 1 })
-	quantity: number;
-
-	@ManyToOne(() => Orders, (orders) => orders.orderDetails)
-	@JoinColumn({ name: "orderId" })
+	@ManyToOne(() => Orders, (order) => order.order_Status)
+	@JoinTable({ name: "orderId" })
 	order: Orders;
 
-	@ManyToOne(() => Products, (products) => products.OrderDetails)
-	@JoinColumn({ name: "productId" })
-	product: Products;
+	@ManyToOne(() => Status, (status) => status.order_Status)
+	@JoinTable({ name: "statusId" })
+	status: Status;
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;

@@ -5,7 +5,6 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-return-assign */
-import { useAuth0 } from "@auth0/auth0-react";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
@@ -18,7 +17,6 @@ import { createTransaction } from "../../services/apis/payment";
 import { deleteOrderProductByOrderId, getOrderProduct } from "../../services/apis/products";
 import { IPayment } from "../../services/types";
 import { IOrder } from "../../services/types/products";
-import { IUser } from "../../services/types/user";
 import ProcessInformation from "./_Information";
 import PolicyPayment from "./_PolicyPayment";
 import PolicyRefund from "./_PolicyRefund";

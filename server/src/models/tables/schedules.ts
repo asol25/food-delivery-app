@@ -3,10 +3,12 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinColumn,
 	JoinTable,
 	ManyToMany,
 	ManyToOne,
 	OneToMany,
+	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
@@ -23,25 +25,15 @@ export class Schedules extends BaseEntity {
 	userId!: number;
 
 	@ManyToOne(() => Users, (user) => user.Schedules)
-	@JoinTable()
+	@JoinTable({ name: "userId" })
 	user: Users;
-
-	@ManyToMany(() => Orders)
-	@JoinTable()
-	orders: Orders[];
 
 	@OneToMany(() => NotificationsDetail, (notificationsDetail) => notificationsDetail.schedules)
 	@JoinTable()
 	notificationsDetail: NotificationsDetail[];
 
-	@Column({ type: "timestamp" })
-	from: Date;
-
-	@Column({ type: "timestamp", nullable: true })
-	ship!: Date;
-
-	@Column({ type: "timestamp", nullable: true })
-	to!: Date;
+	@Column()
+	timer: string;
 
 	@CreateDateColumn({ name: "created_at" })
 	createdAt: Date;

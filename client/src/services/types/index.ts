@@ -1,4 +1,4 @@
-export * as ProductsType from "./products";
+import { IProducts } from "./products";
 
 export interface ICreateOrderProductDto {
 	key_user_id: number;
@@ -12,6 +12,20 @@ export interface IUpdateOrderProductDto {
 
 export interface IGetOrderProducts {
 	key_user_id: number;
+}
+
+interface IProductWithICreateOrder {
+	key_product_id: number;
+	key_product_quantity: number;
+}
+
+export interface ICreateOrder {
+	key_user_id: number;
+	products: IProductWithICreateOrder[];
+	bankCode: string;
+	total_amount: number;
+	status: boolean;
+	schedule_timer: string;
 }
 
 export interface IPayment {
