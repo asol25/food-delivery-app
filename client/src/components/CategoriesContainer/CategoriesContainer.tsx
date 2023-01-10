@@ -1,4 +1,4 @@
-import { title } from "process";
+/* eslint-disable no-unused-vars */
 import * as React from "react";
 import FoodIcon from "../../img/favorite_food_icon.png";
 import { IProducts } from "../../services/types/products";
@@ -18,7 +18,6 @@ export type filterStateProducts = {
 	rating: number;
 };
 const CategoriesContainer: React.FunctionComponent<ICategoriesContainerProps> = (props) => {
-	const { products, title, onGetProductsByLimit } = props;
 	const [filterStateProducts, setFilterStateProducts] = React.useState<filterStateProducts>({
 		categoryID: 0,
 		cost: 0,
@@ -51,14 +50,14 @@ const CategoriesContainer: React.FunctionComponent<ICategoriesContainerProps> = 
 
 		return newProducts;
 	};
-	const filterProducts = products
-		? applyFilter(filterStateProducts, products)
+	const filterProducts = props.products
+		? applyFilter(filterStateProducts, props.products)
 		: ([] as IProducts[]);
 	return (
 		<>
 			<div className="section" id="menu">
 				<div className=" bg-orange-100 px-4 py-1 rounded-full w-fit flex items-center gap-2 section-container">
-					<h1 className="capitalize text-base text-orange-500 font-semibold">{title}</h1>
+					<h1 className="capitalize text-base text-orange-500 font-semibold">{props.title}</h1>
 					<img className="w-8 h-8 object-contain rounded-full" src={FoodIcon} alt="_food_icon" />
 				</div>
 				<div className="flex justify-end">
@@ -74,7 +73,7 @@ const CategoriesContainer: React.FunctionComponent<ICategoriesContainerProps> = 
 							<FoodProducts
 								product={product}
 								key={product.id}
-								title={title}
+								title={props.title}
 								products={filterProducts}
 							/>
 						))}
@@ -83,7 +82,7 @@ const CategoriesContainer: React.FunctionComponent<ICategoriesContainerProps> = 
 					<button
 						type="button"
 						className="border border-black py-2 px-8 hover:text-white hover:bg-black "
-						onClick={() => onGetProductsByLimit(PAGINATION)}
+						onClick={() => props.onGetProductsByLimit(PAGINATION)}
 					>
 						New More
 					</button>

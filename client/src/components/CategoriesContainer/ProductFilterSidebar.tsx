@@ -18,12 +18,7 @@ import { CategoriesHook } from "../../services/hook/categoriesHook";
 import { ICategory } from "../../services/types/products";
 import { filterStateProducts } from "./CategoriesContainer";
 
-export const FILTER_RATING_OPTIONS = [
-	"up4Star",
-	"up3Star",
-	"up2Star",
-	"up1Star",
-];
+export const FILTER_RATING_OPTIONS = ["up4Star", "up3Star", "up2Star", "up1Star"];
 
 export const FILTER_PRICE_OPTIONS = [
 	{ value: "below", label: "Below $3", price: 3 },
@@ -37,10 +32,7 @@ interface IProductFilterSideBarProps {
 	onFilter: React.Dispatch<React.SetStateAction<filterStateProducts>>;
 	cleanFilter: () => void;
 }
-const ProductFilterSideBar: React.FunctionComponent<
-	IProductFilterSideBarProps
-> = (props) => {
-	const { onFilter, cleanFilter } = props;
+const ProductFilterSideBar: React.FunctionComponent<IProductFilterSideBarProps> = (props) => {
 	const anchor: Anchor = "right";
 	const [state, setState] = React.useState({
 		top: false,
@@ -49,25 +41,23 @@ const ProductFilterSideBar: React.FunctionComponent<
 		right: false,
 	});
 	const { categories } = CategoriesHook();
-	const toggleDrawer = (anchor: string, open: boolean) => (event: any) => {
-		if (
-			event.type === "keydown" &&
-			(event.key === "Tab" || event.key === "Shift")
-		) {
-			return;
-		}
+	const toggleDrawer =
+		(anchor: string, open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+			if (
+				event.type === "keydown" &&
+				((event as React.KeyboardEvent).key === "Tab" ||
+					(event as React.KeyboardEvent).key === "Shift")
+			) {
+				return;
+			}
 
-		setState({ ...state, [anchor]: open });
-	};
+			setState({ ...state, [anchor]: open });
+		};
 
 	return (
 		<>
 			<React.Fragment key={anchor}>
-				<Button
-					disableRipple
-					color="inherit"
-					onClick={toggleDrawer(anchor, true)}
-				>
+				<Button disableRipple color="inherit" onClick={toggleDrawer(anchor, true)}>
 					<h3 className="font-bold text-xs px-4">Filters&nbsp;</h3>
 					<FilterListIcon />
 				</Button>
@@ -105,7 +95,7 @@ const ProductFilterSideBar: React.FunctionComponent<
 											control={<Radio />}
 											label={item.name}
 											onClick={() =>
-												onFilter((prevState) => ({
+												props.onFilter((prevState) => ({
 													...prevState,
 													categoryID: item.id,
 												}))
@@ -125,7 +115,7 @@ const ProductFilterSideBar: React.FunctionComponent<
 											control={<Radio />}
 											label={item.label}
 											onClick={() =>
-												onFilter((prevState) => ({
+												props.onFilter((prevState) => ({
 													...prevState,
 													cost: item.price,
 												}))
@@ -159,7 +149,7 @@ const ProductFilterSideBar: React.FunctionComponent<
 												"&:hover": { opacity: 0.48 },
 											}}
 											onClick={() =>
-												onFilter((prevState) => ({
+												props.onFilter((prevState) => ({
 													...prevState,
 													rating: index + 1,
 												}))
@@ -171,14 +161,8 @@ const ProductFilterSideBar: React.FunctionComponent<
 						</Stack>
 
 						<Divider />
-						<Box sx={{ p: 3 }} onClick={cleanFilter}>
-							<Button
-								fullWidth
-								size="large"
-								type="submit"
-								color="error"
-								variant="outlined"
-							>
+						<Box sx={{ p: 3 }} onClick={props.cleanFilter}>
+							<Button fullWidth size="large" type="submit" color="error" variant="outlined">
 								<DoNotDisturbAltIcon sx={{ marginRight: ".5em" }} />
 								<span>Clear All</span>
 							</Button>

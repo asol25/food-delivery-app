@@ -10,6 +10,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker";
 import dayjs, { Dayjs } from "dayjs";
 import * as React from "react";
+import { IUser } from "../../services/types/user";
 
 type Information =
 	| "amount"
@@ -23,7 +24,7 @@ type Information =
 	| "phone_two";
 
 interface IInformationProps {
-	user: User | undefined;
+	user: IUser;
 	currentDate: dayjs.Dayjs | null;
 	setCurrentDate: React.Dispatch<React.SetStateAction<dayjs.Dayjs | null>>;
 	handleChangeInformation: (name: Information, value: number | string) => void;
@@ -113,7 +114,7 @@ const ProcessInformation: React.FunctionComponent<IInformationProps> = (props) =
 							type="text"
 							name="full-name"
 							disabled
-							value={user?.nickname}
+							value={user?.name}
 							className="mt-1 capitalize px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
 							placeholder="Jason Alexander"
 						/>

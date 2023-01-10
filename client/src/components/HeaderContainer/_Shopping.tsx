@@ -18,6 +18,7 @@ import { createTransaction } from "../../services/apis/payment";
 import { deleteOrderProductByOrderId, getOrderProduct } from "../../services/apis/products";
 import { IPayment } from "../../services/types";
 import { IOrder } from "../../services/types/products";
+import { IUser } from "../../services/types/user";
 import ProcessInformation from "./_Information";
 import PolicyPayment from "./_PolicyPayment";
 import PolicyRefund from "./_PolicyRefund";
@@ -41,7 +42,7 @@ interface IShoppingProps {}
 
 const Shopping: React.FunctionComponent<IShoppingProps> = () => {
 	const { total, dispatch } = useCount();
-	const { user } = useAuth0();
+	const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
 	const anchor: Anchor = "right";
 	const [state, setState] = React.useState({
 		top: false,
@@ -49,77 +50,36 @@ const Shopping: React.FunctionComponent<IShoppingProps> = () => {
 		bottom: false,
 		right: false,
 	});
-	const [paymentLink, setPaymentLink] = React.useState<string>("");
+	const [PAYMENT_URL, setPAYMENTURL] = React.useState<string>("");
 	const [information, setInformation] = React.useState<IPayment>({
 		amount: 0,
 		bankCode: null,
 		language: null,
 		orderInfo: "Food",
-		redirectUri: "http://localhost:3000/",
+		redirectUri: window.location.host,
 		address_one: null,
 		address_two: null,
 		phone_one: null,
 		phone_two: null,
 		time_picker: null,
 	});
-	const [currentDate, setCurrentDate] = React.useState<Dayjs | null>(dayjs("2022-04-07"));
+	const [currentDate, setCurrentDate] = React.useState<Dayjs | null>(dayjs(Date.now()));
 	const [activeStep, setActiveStep] = React.useState(0);
 
 	// Variable to clean request in hook.
 	const [isCheckedToggle, setIsCheckedToggle] = React.useState<boolean>(false);
 	const [orderProducts, setOrderProducts] = React.useState<IOrder[] | undefined>(undefined);
 
-	const sendInformation = () => createTransaction(information);
-
-	const handleChangeInformation = (name: Information, value: number | string) => {
-		setInformation((prevState) => ({
-			...prevState,
-			[name]: value,
-		}));
-	};
-
-	const handleNext = async (operator: boolean) => {
-		if (operator && activeStep !== 3) {
-			return setActiveStep(activeStep + 1);
-		}
-
-		if (activeStep === 3) {
-			handleChangeInformation("amount", total.count * 20000 * 100);
-			const calender = `${dayjs(currentDate).format("YYYY-MM-DDTHH:mm:ss")}`;
-			handleChangeInformation("time_picker", calender);
-			const finalCase = await sendInformation();
-			if (finalCase.status === 201) {
-				console.log(finalCase.data);
-
-				setPaymentLink(finalCase.data);
-			}
-			return;
-		}
-		return setActiveStep(activeStep - 1);
-	};
-
-	const totalIncome = (products: IOrder[]): number => {
-		let total = 0;
-		if (products.length > 0) {
-			products?.filter((orderProduct: IOrder) => {
-				if (orderProduct.productId) {
-					total += orderProduct.quantity * orderProduct.product.cost;
-				}
-			});
-		}
-		return total;
-	};
-
 	const toggleDrawer =
 		(anchor: string, open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-			setPaymentLink("");
+			setPAYMENTURL("");
 			setActiveStep(0);
 			setInformation({
 				amount: 0,
 				bankCode: null,
 				language: null,
 				orderInfo: "Food",
-				redirectUri: "http://localhost:3000/",
+				redirectUri: window.location.host,
 				address_one: null,
 				address_two: null,
 				phone_one: null,
@@ -140,16 +100,47 @@ const Shopping: React.FunctionComponent<IShoppingProps> = () => {
 			setState({ ...state, [anchor]: open });
 		};
 
-	const handleDeleteOrderProducts = (orderId: number) => {
-		setOrderProducts(orderProducts?.filter((orderProduct: IOrder) => orderProduct.id !== orderId));
+	const handleChangeInformation = (name: Information, value: number | string) => {
+		setInformation((prevState) => ({
+			...prevState,
+			[name]: value,
+		}));
+	};
+
+	const handleNext = async (operator: boolean) => {
+		if (operator) {
+			handleChangeInformation("amount", total.count * 20000 * 100);
+			const timePick = `${dayjs(currentDate).format("YYYY-MM-DDTHH:mm:ss")}`;
+			handleChangeInformation("time_picker", timePick);
+			if (activeStep === 2) {
+				const finalCase = await createTransaction(information);
+				if (finalCase.status === 201) {
+					setPAYMENTURL(finalCase.data);
+				}
+			}
+			return setActiveStep(activeStep + 1);
+		}
+		return setActiveStep(activeStep - 1);
+	};
+
+	const totalIncome = (products: IOrder[]): number => {
+		let total = 0;
+		if (products.length > 0) {
+			products?.filter((orderProduct: IOrder) => {
+				if (orderProduct.productId) {
+					total += orderProduct.quantity * orderProduct.product.cost;
+				}
+			});
+		}
+		return total;
 	};
 
 	const deleteOrderDetailsProducts = async (orderDetailsID: number) => {
-		console.log(orderDetailsID);
-
 		const ordersResponse = await deleteOrderProductByOrderId(orderDetailsID);
 		if (ordersResponse.status === 200 && ordersResponse.data === 1) {
-			handleDeleteOrderProducts(orderDetailsID);
+			setOrderProducts(
+				orderProducts?.filter((orderProduct: IOrder) => orderProduct.id !== orderDetailsID)
+			);
 		}
 	};
 
@@ -160,7 +151,7 @@ const Shopping: React.FunctionComponent<IShoppingProps> = () => {
 					<ProcessInformation
 						currentDate={currentDate}
 						setCurrentDate={setCurrentDate}
-						user={user}
+						user={currentUser.user}
 						handleChangeInformation={handleChangeInformation}
 					/>
 				);
@@ -194,8 +185,8 @@ const Shopping: React.FunctionComponent<IShoppingProps> = () => {
 						<Button>
 							<p className="mx-6">Back</p>
 						</Button>
-						<Button onClick={() => handleNext(true)}>
-							<a href={paymentLink}>Finish</a>
+						<Button>
+							<a href={PAYMENT_URL}>Finish</a>
 						</Button>
 					</>
 				);
@@ -207,7 +198,6 @@ const Shopping: React.FunctionComponent<IShoppingProps> = () => {
 		let isChecked = true;
 		if (isChecked && isCheckedToggle === true) {
 			const fetchOrderProducts = async () => {
-				const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
 				if (currentUser.hasOwnProperty("user")) {
 					const ordersResponse = await getOrderProduct(currentUser.user.id);
 					if (ordersResponse.status === 200) {
@@ -216,7 +206,6 @@ const Shopping: React.FunctionComponent<IShoppingProps> = () => {
 							type: "init",
 							value: totalIncome(ordersResponse.data),
 						});
-						setIsCheckedToggle(false);
 					}
 				}
 			};
